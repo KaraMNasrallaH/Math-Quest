@@ -48,7 +48,7 @@ class MainMenu(QMainWindow):
         self.enable_dark_title_bar()
 
     def initUI(self):
-        self.setWindowTitle("Math Test Project")
+        self.setWindowTitle("Math Quest")
         self.resize(800, 600)
         self.central_widget.setStyleSheet("background-color: #0d0d0c;")
         

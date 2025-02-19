@@ -1,10 +1,10 @@
 import sys
 from PyQt5.QtWidgets import (
     QMainWindow, QApplication, QWidget, QVBoxLayout, QLabel, QGridLayout, 
-    QPushButton, QSpacerItem, QSizePolicy
+    QPushButton, QSpacerItem, QSizePolicy, QGraphicsDropShadowEffect
 )
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QFontDatabase, QFont
+from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtGui import QFontDatabase, QFont, QColor
 import ctypes
 
 """
@@ -42,7 +42,7 @@ class MainMenu(QMainWindow):
         
         # Grid layout for specialization buttons
         self.grid_layout = QGridLayout()
-        self.grid_layout.setSpacing(50)
+        self.grid_layout.setSpacing(60)
         
         self.initUI()
         self.enable_dark_title_bar()
@@ -60,10 +60,9 @@ class MainMenu(QMainWindow):
         self.title_label.setAlignment(Qt.AlignHCenter | Qt.AlignTop)
         self.title_label.setFont(QFont(family, 22, QFont.Medium))
         self.title_label.setStyleSheet("""
-            color: white;
-            letter-spacing: 1px; 
-            line-height: 1.2;
-        """)
+                                        color: white;
+                                        letter-spacing: 1px; 
+                                        line-height: 1.2;""")
         self.main_layout.addWidget(self.title_label)
         
         # Add a spacer to allow dynamic adjustment between the title and buttons
@@ -79,7 +78,7 @@ class MainMenu(QMainWindow):
                 color: white;
                 padding: 13px;
                 border-radius: 10px;
-                background-color: #1c1c1c;
+                background-color: black;
                 font-size: 20px;
                 font-weight: bold;
                 }
@@ -92,6 +91,11 @@ class MainMenu(QMainWindow):
                 border: 5px solid #121111;
                 }
             """)
+            self.apply_glow_effect(btn, 10)
+            
+            btn.enterEvent = lambda event, b=btn: self.apply_glow_effect(b, 35)  # Add glow on hover
+            btn.leaveEvent = lambda event, b=btn: self.apply_glow_effect(b, 10)  # Remove glow on exit
+
             btn.clicked.connect(lambda checked, t=text: self.button_clicked(t))
             self.grid_layout.addWidget(btn, *pos)
         
@@ -99,8 +103,19 @@ class MainMenu(QMainWindow):
         self.main_layout.addLayout(self.grid_layout)
         self.main_layout.addStretch()
 
+    def apply_glow_effect(self, button, intensity):
+        effect = QGraphicsDropShadowEffect()
+        effect.setBlurRadius(intensity)  # Adjust the glow intensity
+        effect.setXOffset(0)  # No horizontal shadow
+        effect.setYOffset(0)  # No vertical shadow
+        effect.setColor(QColor(255, 255, 255))  # White glow
+        button.setGraphicsEffect(effect)
+
+
+
     def button_clicked(self, text):
         print(f"{text} button clicked!")
+
 
     def enable_dark_title_bar(self):
         # Enable Windows immersive dark mode for the title bar

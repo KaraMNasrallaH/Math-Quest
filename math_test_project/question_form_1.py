@@ -6,6 +6,9 @@ from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QFont
 import sys
 import ctypes
+from calculator_widget import CalculatorWidget
+import random
+
 
 POSITIONS = [(0, 0), (1, 0), (2, 0), (3, 0)]
 answers = ["A. ", "B. ", "C. ", "D. "]
@@ -23,10 +26,12 @@ class QuestionForm1(QMainWindow):
         self.time_label = QLabel("Time: 00:00:00")
         self.average_label = QLabel("Average: 00:00:00")
         self.question_count_label = QLabel("Question: 0 out of 30")
-        self.calculator_label = QLabel()
+        self.calculator_container = QWidget()  
 
         self.grid_layout = QGridLayout()
         self.base_size = QSize(800, 600)  # Reference size for scaling
+        self.answer_buttons = []
+
         self.initUI()
         self.enable_dark_title_bar()
 
@@ -34,7 +39,7 @@ class QuestionForm1(QMainWindow):
 
         self.grid_layout.setSpacing(int(self.base_size.height() * 0.03))  # 3% of window height
         
-        # Set margins for padding between the buttons and the screen (left and down)
+        # Set margins for padding between the buttons and the screen
         self.grid_layout.setContentsMargins(
             int(self.base_size.width() * 0.03),   # left
             0,                                    # top
@@ -77,10 +82,18 @@ class QuestionForm1(QMainWindow):
             line-height: 1.2;""")
         self.main_layout.addWidget(self.question_title)
 
-        # Configure calculator
-        self.calculator_label.setStyleSheet(
-            "border: 2px solid #2e2e2e; background-color: #121212; color: white; border-radius: 11px")
-        self.grid_layout.addWidget(self.calculator_label, 0, 2, 4, 1, alignment=Qt.AlignRight)
+        # calculator widget
+        self.calculator_container.setStyleSheet(
+            "border: 3px solid #111111; background-color: #0E0E0E; color: white; border-radius: 11px")
+
+        container_layout = QVBoxLayout(self.calculator_container)
+        container_layout.setContentsMargins(0, 0, 0, 0)
+
+        self.calculator = CalculatorWidget()
+        container_layout.addWidget(self.calculator)
+
+        self.grid_layout.addWidget(self.calculator_container, 0, 2, 4, 1, alignment=Qt.AlignRight)
+
 
         # Create answer buttons
         for pos, answer in zip(POSITIONS, answers):
@@ -107,9 +120,29 @@ class QuestionForm1(QMainWindow):
             """)
             btn.setMinimumSize(150, 40)  # Minimum size for readability
             self.grid_layout.addWidget(btn, *pos, alignment=Qt.AlignLeft)
+            self.answer_buttons.append(btn)
 
         self.main_layout.addLayout(self.grid_layout)
-
+        
+    def load_question(self, question_data):
+        """
+        Expects question_data as a dict with keys:
+        'question': string (the question text),
+        'solution': string (the correct answer),
+        'distractors': list of strings (incorrect answers).
+        """
+        # Update the question title with the question text
+        self.question_title.setText(question_data['question'])
+        
+        # Combine correct answer and distractors and randomize the order
+        choices = [question_data['solution']] + question_data['distractors']
+        import random
+        random.shuffle(choices)
+        
+        # Update the answer buttons with the new choices, preserving their prefixes (e.g., "A. ", "B. ", etc.)
+        for i, btn in enumerate(self.answer_buttons):
+            btn.setText(answers[i] + choices[i])
+        
     def resizeEvent(self, event):
         """Handle dynamic scaling when window is resized"""
         super().resizeEvent(event)
@@ -124,13 +157,13 @@ class QuestionForm1(QMainWindow):
                     int(window_size.height() * 0.07)   # 7% of window height
                 )
                 widget.setFont(QFont("Arial", max(12, int(window_size.height() * 0.025))))
-
-        # update calculator size
-        self.calculator_label.setFixedSize(
-            int(window_size.width() * 0.3),   # 30% of window width
-            int(window_size.height() * 0.54)   # 54% of window height
+                
+        # update the calculator container size
+        self.calculator_container.setFixedSize(
+            int(window_size.width() * 0.3),
+            int(window_size.height() * 0.54)
         )
-        
+
         # update top labels
         for label in [self.time_label, self.average_label, self.question_count_label]:
             label.setFixedSize(
@@ -159,6 +192,7 @@ class QuestionForm1(QMainWindow):
             int(window_size.height() * 0.05)  # bottom
         )
         self.grid_layout.setSpacing(int(window_size.height() * 0.03))
+        
 
     def enable_dark_title_bar(self):
         hwnd = int(self.winId())
@@ -171,5 +205,12 @@ class QuestionForm1(QMainWindow):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = QuestionForm1()
+    # For testing, load a sample question:
+    sample_question = {
+        "question": "What is 1/2 of 8?",
+        "solution": "4",
+        "distractors": ["2", "3", "5"]
+    }
+    window.load_question(sample_question)
     window.show()
     sys.exit(app.exec())

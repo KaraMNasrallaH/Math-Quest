@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import (
     QMainWindow, QApplication, QWidget, QVBoxLayout, QLabel, QGridLayout, 
     QPushButton, QSpacerItem, QSizePolicy, QGraphicsDropShadowEffect
 )
-from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtCore import Qt, QTimer, pyqtSignal
 from PyQt5.QtGui import QFontDatabase, QFont, QColor
 import ctypes
 
@@ -30,6 +30,9 @@ POSITIONS = [
 ]
 
 class MainMenu(QMainWindow):
+    
+    topicSelected = pyqtSignal(str)
+
     def __init__(self):
         super().__init__()
         # Create a central widget and a main vertical layout
@@ -115,7 +118,8 @@ class MainMenu(QMainWindow):
 
     def button_clicked(self, text):
         print(f"{text} button clicked!")
-
+        # Emit the custom signal when a topic is selected
+        self.topicSelected.emit(text)
 
     def enable_dark_title_bar(self):
         # Enable Windows immersive dark mode for the title bar
@@ -125,7 +129,9 @@ class MainMenu(QMainWindow):
             hwnd, DWMWA_USE_IMMERSIVE_DARK_MODE, 
             ctypes.byref(ctypes.c_int(1)), 4
         )
-
+    def some_method_where_topic_is_selected(self, topic):
+        # When a topic is selected, emit the signal:
+        self.topicSelected.emit(topic)
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MainMenu()

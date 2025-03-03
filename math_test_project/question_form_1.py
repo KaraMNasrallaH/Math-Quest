@@ -1,105 +1,76 @@
 from PyQt5.QtWidgets import (
-    QMainWindow, QApplication, QWidget, QVBoxLayout, QLabel, QGridLayout, 
-    QPushButton, QSizePolicy, QHBoxLayout
+    QWidget, QVBoxLayout, QLabel, QGridLayout, 
+    QPushButton, QHBoxLayout, QApplication
 )
-from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtCore import Qt, QSize, pyqtSignal
 from PyQt5.QtGui import QFont
 import sys
-import ctypes
 from calculator_widget import CalculatorWidget
 import random
 
 
 POSITIONS = [(0, 0), (1, 0), (2, 0), (3, 0)]
-answers = ["A. ", "B. ", "C. ", "D. "]
+prefixes = ["A. ", "B. ", "C. ", "D. "]
 
-class QuestionForm1(QMainWindow):
+class QuestionForm1(QWidget):
+    new_question = pyqtSignal(str)
+
     def __init__(self):
         super().__init__()
-        self.central_widget = QWidget(self)
-        self.setCentralWidget(self.central_widget)
-        self.main_layout = QVBoxLayout(self.central_widget)
+        self.main_layout = QVBoxLayout(self)
         self.top_labels_layout = QHBoxLayout()
 
-        # Initialize widgets
         self.question_title = QLabel("Question Example.........")
         self.time_label = QLabel("Time: 00:00:00")
         self.average_label = QLabel("Average: 00:00:00")
-        self.question_count_label = QLabel("Question: 0 out of 30")
-        self.calculator_container = QWidget()  
+        self.question_count_label = QLabel(f"Question: 0 out of 15")
+        self.calculator_container = QWidget()
 
         self.grid_layout = QGridLayout()
-        self.base_size = QSize(800, 600)  # Reference size for scaling
+        self.base_size = QSize(800, 600)
         self.answer_buttons = []
 
         self.initUI()
-        self.enable_dark_title_bar()
 
     def initUI(self):
-
-        self.grid_layout.setSpacing(int(self.base_size.height() * 0.03))  # 3% of window height
-        
-        # Set margins for padding between the buttons and the screen
-        self.grid_layout.setContentsMargins(
-            int(self.base_size.width() * 0.03),   # left
-            0,                                    # top
-            int(self.base_size.width() * 0.03),   # right
-            int(self.base_size.height() * 0.05)   # bottom
-        )
-
         self.setWindowTitle("Math Quest")
         self.resize(self.base_size)
         self.setStyleSheet("background-color: #0d0d0c")
 
-        # Configure top labels
         for label in [self.time_label, self.average_label, self.question_count_label]:
-            label.setFont(QFont("Arial", int(self.base_size.height() * 0.02)))  # 2% of window height
-            label.setStyleSheet(f"color: white; border: 4px solid #2e2e2e; padding: 3px; border-radius: 20px;")
+            label.setStyleSheet("color: white; border: 4px solid #2e2e2e; padding: 3px; border-radius: 20px;")
             label.setAlignment(Qt.AlignCenter)
-            label.setFixedSize(
-                int(self.base_size.width() * 0.3),   # 30% of window width
-                int(self.base_size.height() * 0.1)   # 10% of window height
-            )
-        
             self.top_labels_layout.addWidget(label)
-
-        self.top_labels_layout.setContentsMargins(
-        int(self.base_size.width() * 0.03),   # left
-        int(self.base_size.width() * 0.04),   # top
-        int(self.base_size.width() * 0.03),   # right
-        0
-        )
-        
         self.main_layout.addLayout(self.top_labels_layout)
 
-        # Configure question title
         self.question_title.setAlignment(Qt.AlignHCenter | Qt.AlignTop)
-        self.question_title.setFont(QFont("Arial", int(self.base_size.height() * 0.035)))
-        self.question_title.setStyleSheet("""
-            color: white;
-            letter-spacing: 1px;
-            padding-top: 40px;
-            line-height: 1.2;""")
+        self.question_title.setStyleSheet("color: white; letter-spacing: 1px; padding-top: 40px;")
         self.main_layout.addWidget(self.question_title)
 
-        # calculator widget
         self.calculator_container.setStyleSheet(
-            "border: 3px solid #111111; background-color: #0E0E0E; color: white; border-radius: 11px")
-
+            "border: 3px solid #111111; background-color: #0E0E0E; color: white; border-radius: 11px"
+        )
         container_layout = QVBoxLayout(self.calculator_container)
         container_layout.setContentsMargins(0, 0, 0, 0)
-
         self.calculator = CalculatorWidget()
         container_layout.addWidget(self.calculator)
-
         self.grid_layout.addWidget(self.calculator_container, 0, 2, 4, 1, alignment=Qt.AlignRight)
 
+        self.show_answer_btn = QPushButton("Show", self)
+        self.show_answer_btn.setEnabled(False)
+        self.show_answer_btn.clicked.connect(self.show_answer)
+        
 
-        # Create answer buttons
-        for pos, answer in zip(POSITIONS, answers):
-            btn = QPushButton(answer, self.central_widget)
-            btn.setFont(QFont("Arial", int(self.base_size.height() * 0.03)))
-            btn.setStyleSheet("""
+        self.next_btn = QPushButton("Next", self)
+        self.next_btn.clicked.connect(self.next_button)
+
+        self.grid_layout.addWidget(self.next_btn, 3, 1, alignment=Qt.AlignLeft)
+        self.grid_layout.addWidget(self.show_answer_btn, 3, 1, alignment=Qt.AlignCenter)
+
+        for pos in POSITIONS:
+            btn = QPushButton("", self)
+            btn.setStyleSheet(
+                """
                 QPushButton {
                     border: 2px solid #888888;
                     color: white;
@@ -114,98 +85,115 @@ class QuestionForm1(QMainWindow):
                     border: 2px solid white;
                 }
                 QPushButton:pressed {
-                    background-color: #444444;
-                    border: 5px solid #121111;
+                    background-color: #2e2e2e;
+                    border: 5px solid black;
                 }
-            """)
-            btn.setMinimumSize(150, 40)  # Minimum size for readability
+                """
+            )
+            btn.setMinimumSize(200, 40)
             self.grid_layout.addWidget(btn, *pos, alignment=Qt.AlignLeft)
+            btn.clicked.connect(self.user_input)
             self.answer_buttons.append(btn)
 
         self.main_layout.addLayout(self.grid_layout)
-        
+
     def load_question(self, question_data):
-        """
-        Expects question_data as a dict with keys:
-        'question': string (the question text),
-        'solution': string (the correct answer),
-        'distractors': list of strings (incorrect answers).
-        """
-        # Update the question title with the question text
+        self.correct_solution = question_data['solution']
         self.question_title.setText(question_data['question'])
-        
-        # Combine correct answer and distractors and randomize the order
         choices = [question_data['solution']] + question_data['distractors']
-        import random
         random.shuffle(choices)
-        
-        # Update the answer buttons with the new choices, preserving their prefixes (e.g., "A. ", "B. ", etc.)
         for i, btn in enumerate(self.answer_buttons):
-            btn.setText(answers[i] + choices[i])
+            btn.setText(prefixes[i] + choices[i])
+            btn.setProperty("UserAnswer", choices[i])
+
+    def user_input(self):
+        sender_button = self.sender()
+        if sender_button:
+            answer = sender_button.property("UserAnswer")
+            new_color = "#3CE217" if answer == self.correct_solution else "#BF0505"
+            sender_button.setStyleSheet(
+                f"border: 3px solid {new_color}; color: white; padding: 6px; border-radius: 10px; "
+                "background-color: black; font-weight: bold; text-align: left;"
+            )
+            for btn in self.answer_buttons:
+                btn.setEnabled(False)
+            self.show_answer_btn.setEnabled(True)
+
+    def show_answer(self):
+        for btn in self.answer_buttons:
+            if btn.property("UserAnswer") == self.correct_solution:
+                btn.setStyleSheet(
+                f"border: 3px solid #3CE217; color: white; padding: 6px; border-radius: 10px; "
+                "background-color: black; font-weight: bold; text-align: left;"
+                )
+    
+    def next_button(self):
+        self.new_question.emit("")
+
+    def update_count(self, count_str):
+        """Slot to update the question count label."""
+        self.question_count_label.setText(f"Question: {count_str} out of 15")
         
     def resizeEvent(self, event):
-        """Handle dynamic scaling when window is resized"""
         super().resizeEvent(event)
-        window_size = self.size()
+        width, height = self.size().width(), self.size().height()
         
-        # update button sizes
-        for i in range(self.grid_layout.count()):
-            widget = self.grid_layout.itemAt(i).widget()
-            if isinstance(widget, QPushButton):
-                widget.setFixedSize(
-                    int(window_size.width() * 0.2),   # 20% of window width
-                    int(window_size.height() * 0.07)   # 7% of window height
-                )
-                widget.setFont(QFont("Arial", max(12, int(window_size.height() * 0.025))))
-                
-        # update the calculator container size
-        self.calculator_container.setFixedSize(
-            int(window_size.width() * 0.3),
-            int(window_size.height() * 0.54)
-        )
+        self.update_answer_buttons(width, height)
+        self.update_navigation_buttons(width, height)
+        self.update_labels(width, height)
 
-        # update top labels
-        for label in [self.time_label, self.average_label, self.question_count_label]:
-            label.setFixedSize(
-                int(window_size.width() * 0.3),   # 30% of window width
-                int(window_size.height() * 0.1)   # 10% of window height
-            )
-            label.setFont(QFont("Arial", max(10, int(window_size.height() * 0.022))))
-            
-
-        # update top labels padding
+        self.calculator_container.setFixedSize(int(width * 0.3), int(height * 0.54))
+        self.question_title.setFont(QFont("Arial", max(16, int(height * 0.035))))
         self.top_labels_layout.setContentsMargins(
-        int(self.base_size.width() * 0.03),   # left
-        int(self.base_size.width() * 0.04),   # top
-        int(self.base_size.width() * 0.03),   # right
-        0                                     # buttom
+            int(self.base_size.width() * 0.03),
+            int(self.base_size.width() * 0.04),
+            int(self.base_size.width() * 0.03),
+            0
         )
-
-        # update question title font
-        self.question_title.setFont(QFont("Arial", max(16, int(window_size.height() * 0.035))))
-
-        # update grid layout padding
         self.grid_layout.setContentsMargins(
-            int(window_size.width() * 0.03),  # left
-            0,                                # top
-            int(window_size.width() * 0.03),  # right
-            int(window_size.height() * 0.05)  # bottom
+            int(width * 0.03), 0, int(width * 0.03), int(height * 0.05)
         )
-        self.grid_layout.setSpacing(int(window_size.height() * 0.03))
-        
+        self.grid_layout.setSpacing(int(height * 0.03))
 
-    def enable_dark_title_bar(self):
-        hwnd = int(self.winId())
-        DWMWA_USE_IMMERSIVE_DARK_MODE = 20
-        ctypes.windll.dwmapi.DwmSetWindowAttribute(
-            hwnd, DWMWA_USE_IMMERSIVE_DARK_MODE, 
-            ctypes.byref(ctypes.c_int(1)), 4
-        )
+    def update_answer_buttons(self, width, height):
+        for btn in self.answer_buttons:
+            btn.setFixedSize(int(width * 0.25), int(height * 0.07))
+            btn.setFont(QFont("Arial", max(12, int(height * 0.025))))
+
+    def update_navigation_buttons(self, width, height):
+        d = int(min(width, height) * 0.09)
+        style_template = f"""
+            QPushButton {{
+                border: 2px solid #888888;
+                color: white;
+                border-radius: {d//2}px;
+                background-color: black;
+                font-weight: bold;
+                text-align: center;
+            }}
+            QPushButton:hover {{
+                background-color: #2e2e2e;
+                border: 2px solid white;
+            }}
+            QPushButton:pressed {{
+                background-color: #2e2e2e;
+                border: 5px solid black;
+            }}
+        """
+        for btn in [self.next_btn, self.show_answer_btn]:
+            btn.setFixedSize(d, d)
+            btn.setStyleSheet(style_template)
+            btn.setFont(QFont("Arial", int(self.base_size.height() * 0.02)))
+
+    def update_labels(self, width, height):
+        for label in [self.time_label, self.average_label, self.question_count_label]:
+            label.setFixedSize(int(width * 0.3), int(height * 0.1))
+            label.setFont(QFont("Arial", max(10, int(height * 0.022))))
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = QuestionForm1()
-    # For testing, load a sample question:
     sample_question = {
         "question": "What is 1/2 of 8?",
         "solution": "4",
@@ -214,3 +202,4 @@ if __name__ == "__main__":
     window.load_question(sample_question)
     window.show()
     sys.exit(app.exec())
+

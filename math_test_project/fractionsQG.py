@@ -129,13 +129,13 @@ class FractionQG:
             # 30% chance for an already simplified fraction
             else:
                 if gcd == 1:
-                    self.solution = f"This fraction is already simplified: {a}/{b}"
+                    self.solution = f"{a}/{b}"
                     self.question_text = f"Simplify this fraction: {a}/{b}"
                     
                     # Distractor mistakes:
-                    distractor1 = f"This fraction is already simplified: {a}/{b+1}"
-                    distractor2 = f"This fraction is already simplified: {a+1}/{b}"
-                    distractor3 = f"This fraction is already simplified: {b}/{a}"
+                    distractor1 = f"{a}/{b+1}"
+                    distractor2 = f"{a+1}/{b}"
+                    distractor3 = f"{b}/{a}"
                     break
 
         self.distractors = [distractor1, distractor2, distractor3]

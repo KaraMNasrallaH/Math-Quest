@@ -4,49 +4,62 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import Qt, QSize, pyqtSignal
 from PyQt5.QtGui import QFont
+
+from Utils.calculator_widget import CalculatorWidget
+
 import sys
-from calculator_widget import CalculatorWidget
 import random
 
-
+# Predefined positions for answer buttons on the grid.
 POSITIONS = [(0, 0), (1, 0), (2, 0), (3, 0)]
+# Prefixes for the answer choices.
 prefixes = ["A. ", "B. ", "C. ", "D. "]
 
 class QuestionForm1(QWidget):
+    # Signal to request a new question.
     new_question = pyqtSignal(str)
 
     def __init__(self):
         super().__init__()
         self.main_layout = QVBoxLayout(self)
+        # Layout for top labels (time, average, question count).
         self.top_labels_layout = QHBoxLayout()
 
+        # Initialize UI components.
         self.question_title = QLabel("Question Example.........")
         self.time_label = QLabel("Time: 00:00:00")
         self.average_label = QLabel("Average: 00:00:00")
-        self.question_count_label = QLabel(f"Question: 0 out of 15")
+        self.question_count_label = QLabel("Question: 0 out of 15")
+        
+        # Container widget for the embedded calculator.
         self.calculator_container = QWidget()
 
         self.grid_layout = QGridLayout()
         self.base_size = QSize(800, 600)
+        # List to store answer buttons.
         self.answer_buttons = []
 
         self.initUI()
 
     def initUI(self):
+        """Initializes and arranges UI components."""
         self.setWindowTitle("Math Quest")
         self.resize(self.base_size)
         self.setStyleSheet("background-color: #0d0d0c")
 
+        # Configure and add top labels (time, average, question count).
         for label in [self.time_label, self.average_label, self.question_count_label]:
             label.setStyleSheet("color: white; border: 4px solid #2e2e2e; padding: 3px; border-radius: 20px;")
             label.setAlignment(Qt.AlignCenter)
             self.top_labels_layout.addWidget(label)
         self.main_layout.addLayout(self.top_labels_layout)
 
+        # Set up the question title label.
         self.question_title.setAlignment(Qt.AlignHCenter | Qt.AlignTop)
         self.question_title.setStyleSheet("color: white; letter-spacing: 1px; padding-top: 40px;")
         self.main_layout.addWidget(self.question_title)
 
+        # Set up the calculator container.
         self.calculator_container.setStyleSheet(
             "border: 3px solid #111111; background-color: #0E0E0E; color: white; border-radius: 11px"
         )
@@ -56,17 +69,19 @@ class QuestionForm1(QWidget):
         container_layout.addWidget(self.calculator)
         self.grid_layout.addWidget(self.calculator_container, 0, 2, 4, 1, alignment=Qt.AlignRight)
 
+        # Create navigation buttons: "Show" to reveal the answer and "Next" for next question.
         self.show_answer_btn = QPushButton("Show", self)
         self.show_answer_btn.setEnabled(False)
         self.show_answer_btn.clicked.connect(self.show_answer)
         
-
         self.next_btn = QPushButton("Next", self)
         self.next_btn.clicked.connect(self.next_button)
 
+        # Add the navigation buttons to the grid layout.
         self.grid_layout.addWidget(self.next_btn, 3, 1, alignment=Qt.AlignLeft)
         self.grid_layout.addWidget(self.show_answer_btn, 3, 1, alignment=Qt.AlignCenter)
 
+        # Create answer buttons and add them to the grid.
         for pos in POSITIONS:
             btn = QPushButton("", self)
             btn.setStyleSheet(
@@ -98,8 +113,15 @@ class QuestionForm1(QWidget):
         self.main_layout.addLayout(self.grid_layout)
 
     def load_question(self, question_data):
+        """
+        Loads a new question into the form.
+        
+        Args:
+            question_data (dict): Dictionary containing keys 'question', 'solution', and 'distractors'.
+        """
         self.correct_solution = question_data['solution']
         self.question_title.setText(question_data['question'])
+        # Combine the correct answer with distractors and randomize their order.
         choices = [question_data['solution']] + question_data['distractors']
         random.shuffle(choices)
         for i, btn in enumerate(self.answer_buttons):
@@ -107,34 +129,41 @@ class QuestionForm1(QWidget):
             btn.setProperty("UserAnswer", choices[i])
 
     def user_input(self):
+        """Handles the user clicking an answer button and updates UI based on correctness."""
         sender_button = self.sender()
         if sender_button:
             answer = sender_button.property("UserAnswer")
+            # Set green border if correct, red if incorrect.
             new_color = "#3CE217" if answer == self.correct_solution else "#BF0505"
             sender_button.setStyleSheet(
                 f"border: 3px solid {new_color}; color: white; padding: 6px; border-radius: 10px; "
                 "background-color: black; font-weight: bold; text-align: left;"
             )
+            # Disable all answer buttons after selection.
             for btn in self.answer_buttons:
                 btn.setEnabled(False)
+            # Enable show button to reveal the correct answer.
             self.show_answer_btn.setEnabled(True)
 
     def show_answer(self):
+        """Highlights the correct answer by updating its style."""
         for btn in self.answer_buttons:
             if btn.property("UserAnswer") == self.correct_solution:
                 btn.setStyleSheet(
-                f"border: 3px solid #3CE217; color: white; padding: 6px; border-radius: 10px; "
-                "background-color: black; font-weight: bold; text-align: left;"
+                    f"border: 3px solid #3CE217; color: white; padding: 6px; border-radius: 10px; "
+                    "background-color: black; font-weight: bold; text-align: left;"
                 )
-    
+
     def next_button(self):
+        """Emits the signal to load the next question."""
         self.new_question.emit("")
 
     def update_count(self, count_str):
-        """Slot to update the question count label."""
+        """Method to update the question count label."""
         self.question_count_label.setText(f"Question: {count_str} out of 15")
         
     def resizeEvent(self, event):
+        """Handles window resizing by adjusting component sizes and layout margins."""
         super().resizeEvent(event)
         width, height = self.size().width(), self.size().height()
         
@@ -142,25 +171,31 @@ class QuestionForm1(QWidget):
         self.update_navigation_buttons(width, height)
         self.update_labels(width, height)
 
+        # Adjust the calculator container size.
         self.calculator_container.setFixedSize(int(width * 0.3), int(height * 0.54))
+        # Adjust the question title font size.
         self.question_title.setFont(QFont("Arial", max(16, int(height * 0.035))))
+        # Update margins for top labels.
         self.top_labels_layout.setContentsMargins(
             int(self.base_size.width() * 0.03),
             int(self.base_size.width() * 0.04),
             int(self.base_size.width() * 0.03),
             0
         )
+        # Update margins and spacing for the grid layout.
         self.grid_layout.setContentsMargins(
             int(width * 0.03), 0, int(width * 0.03), int(height * 0.05)
         )
         self.grid_layout.setSpacing(int(height * 0.03))
 
     def update_answer_buttons(self, width, height):
+        """Updates the size and font of answer buttons based on the current window size."""
         for btn in self.answer_buttons:
             btn.setFixedSize(int(width * 0.25), int(height * 0.07))
             btn.setFont(QFont("Arial", max(12, int(height * 0.025))))
 
     def update_navigation_buttons(self, width, height):
+        """Updates the navigation buttons' (Next and Show) size and style."""
         d = int(min(width, height) * 0.09)
         style_template = f"""
             QPushButton {{
@@ -186,14 +221,15 @@ class QuestionForm1(QWidget):
             btn.setFont(QFont("Arial", int(self.base_size.height() * 0.02)))
 
     def update_labels(self, width, height):
+        """Updates the size and font of the top labels based on the current window size."""
         for label in [self.time_label, self.average_label, self.question_count_label]:
             label.setFixedSize(int(width * 0.3), int(height * 0.1))
             label.setFont(QFont("Arial", max(10, int(height * 0.022))))
 
-
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = QuestionForm1()
+    # Sample question data for testing purposes.
     sample_question = {
         "question": "What is 1/2 of 8?",
         "solution": "4",
@@ -202,4 +238,5 @@ if __name__ == "__main__":
     window.load_question(sample_question)
     window.show()
     sys.exit(app.exec())
+
 

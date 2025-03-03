@@ -2,8 +2,8 @@ import random
 
 class FractionQG:
     """
-    A class to generate fraction questions with solutions and distractors.
-    Supported question types: addition/subtraction, multiplication, simplification, division, and conversion.
+    Generates fraction questions with solutions and distractors.
+    Supported types: addition/subtraction, multiplication, simplification, division, and conversion.
     """
 
     def __init__(self):
@@ -14,11 +14,9 @@ class FractionQG:
 
     def generate(self):
         """
-        Randomly selects a question type and generates the corresponding question,
-        solution, and distractor answers.
-
+        Randomly selects a question type, generates the question, its solution, and distractors.
         Returns:
-            A dictionary containing the question type, question text, solution, and distractors.
+            dict: Contains question type, question text, solution, and distractors.
         """
         self.question_type = random.choice(
             ["addition/subtraction", "multiplication", "simplification", "division", "conversion"]
@@ -44,10 +42,9 @@ class FractionQG:
 
     def generate_addition_subtraction(self):
         """
-        Generates a fraction addition or subtraction question along with its correct solution and distractors.
-
+        Generates an addition or subtraction fraction question.
         Returns:
-            A tuple containing the question text and the solution.
+            tuple: (question text, solution, distractors)
         """
         operator_symbol = random.choice(["+", "-"])
         a, b, c, d = (random.randint(1, 100) for _ in range(4))
@@ -56,53 +53,45 @@ class FractionQG:
             correct_numer = a * d + c * b
             correct_denom = b * d
             self.solution = f"{correct_numer}/{correct_denom}"
-            self.question_text = f"Calculate: {a}/{b} + {c}/{d} (using a common denominator)"
-            # Common distractor mistakes:
-            distractor1 = f"{a * d - c * b}/{b * d}"   # subtraction instead of addition
-            distractor2 = f"{a * d + c * b}/{b + d}"     # adding denominators instead of multiplying
-            distractor3 = f"{a * b + c * d}/{b * d}"     # mixing up multiplication
+            self.question_text = f"Calculate: {a}/{b} + {c}/{d}"
+            distractor1 = f"{a * d - c * b}/{b * d}"   # subtraction error
+            distractor2 = f"{a * d + c * b}/{b + d}"     # wrong denominator (adding instead of multiplying)
+            distractor3 = f"{a * b + c * d}/{b * d}"     # mixing multiplication operations
         else:
             correct_numer = a * d - c * b
             correct_denom = b * d
             self.solution = f"{correct_numer}/{correct_denom}"
-            self.question_text = f"Calculate: {a}/{b} - {c}/{d} (using a common denominator)"
-            # Distractor mistakes:
-            distractor1 = f"{a * d + c * b}/{b * d}"     # using addition instead of subtraction
-            distractor2 = f"{a * d - c * b}/{b + d}"       # wrong denominator: b+d instead of b*d
-            distractor3 = f"{a * b - c * d}/{b * d}"       # mixing up multiplication
+            self.question_text = f"Calculate: {a}/{b} - {c}/{d}"
+            distractor1 = f"{a * d + c * b}/{b * d}"     # addition error
+            distractor2 = f"{a * d - c * b}/{b + d}"       # wrong denominator
+            distractor3 = f"{a * b - c * d}/{b * d}"       # mixing multiplication operations
 
-        
         self.distractors = [distractor1, distractor2, distractor3]
         return self.question_text, self.solution, self.distractors
 
     def generate_multiplication(self):
         """
-        Generates a multiplication fraction question along with its solution and distractors.
-
+        Generates a multiplication fraction question.
         Returns:
-            A tuple containing the question text and the solution.
+            tuple: (question text, solution, distractors)
         """
         a, b, c, d = (random.randint(1, 100) for _ in range(4))
         self.solution = f"{a * c}/{b * d}"
         self.question_text = f"Calculate: {a}/{b} x {c}/{d}"
-        # Distractor mistakes:
-        distractor1 = f"{a * c}/{b + d}"   # mistake: adding denominators instead of multiplying
-        distractor2 = f"{a + c}/{b * d}"     # mistake: adding numerators instead of multiplying
-        distractor3 = f"{a * d}/{b * c}"     # mistake: swapping one term in multiplication
+        distractor1 = f"{a * c}/{b + d}"   # added denominators
+        distractor2 = f"{a + c}/{b * d}"     # added numerators
+        distractor3 = f"{a * d}/{b * c}"     # swapped terms
 
         self.distractors = [distractor1, distractor2, distractor3]
         return self.question_text, self.solution, self.distractors
 
     def generate_simplification(self):
         """
-        Generates a fraction simplification question. There's a 70% chance the fraction is simplifiable,
-        and a 30% chance it's already in simplest form. Also generates distractors accordingly.
-
+        Generates a fraction simplification question.
         Returns:
-            A tuple containing the question text and the solution.
+            tuple: (question text, solution, distractors)
         """
-        def find_gcd(x: int, y: int) -> int:
-            """Return the greatest common divisor using Euclid's algorithm."""
+        def find_gcd(x, y):
             while y:
                 x, y = y, x % y
             return x
@@ -112,27 +101,20 @@ class FractionQG:
             b = random.randint(5, 150)
             gcd = find_gcd(a, b)
 
-            # 70% chance for a simplifiable fraction
-            if random.random() < 0.7:
+            if random.random() < 0.7:  # generate a simplifiable fraction
                 if gcd > 1:
                     simp_numer = a // gcd
                     simp_denom = b // gcd
                     self.solution = f"{simp_numer}/{simp_denom}"
                     self.question_text = f"Simplify this fraction: {a}/{b}"
-
-                    # Distractor mistakes:
-                    distractor1 = f"{a}/{b}"  # unsimplified version
+                    distractor1 = f"{a}/{b}"  # unsimplified
                     distractor2 = f"{simp_denom}/{simp_numer}" if simp_numer != simp_denom else f"{simp_numer}/{simp_denom + 1}"
-                    distractor3 = f"{simp_numer + 1}/{simp_denom}"  # off-by-one error in numerator
+                    distractor3 = f"{simp_numer + 1}/{simp_denom}"  # off-by-one error
                     break
-                
-            # 30% chance for an already simplified fraction
-            else:
+            else:  # fraction is already simplified
                 if gcd == 1:
                     self.solution = f"{a}/{b}"
                     self.question_text = f"Simplify this fraction: {a}/{b}"
-                    
-                    # Distractor mistakes:
                     distractor1 = f"{a}/{b+1}"
                     distractor2 = f"{a+1}/{b}"
                     distractor3 = f"{b}/{a}"
@@ -143,73 +125,59 @@ class FractionQG:
 
     def generate_division(self):
         """
-        Generates a fraction division question along with its correct solution and distractors.
-
+        Generates a division fraction question.
         Returns:
-            A tuple containing the question text and the solution.
+            tuple: (question text, solution, distractors)
         """
         a, b, c, d = (random.randint(1, 100) for _ in range(4))
-        correct_answer = f"{a * d}/{b * c}"
+        self.solution = f"{a * d}/{b * c}"
         self.question_text = f"Calculate: {a}/{b} ÷ {c}/{d}"
-        # Distractor mistakes:
-        distractor1 = f"{(a * d) + 1}/{b * c}"  # small error in numerator
+        distractor1 = f"{(a * d) + 1}/{b * c}"  # small numerator error
         distractor2 = f"{a * d}/{b + c}"         # wrong denominator operation
-        distractor3 = f"{a + b}/{c + d}"          # completely different operation
+        distractor3 = f"{a + b}/{c + d}"          # unrelated operation
 
-        self.solution = correct_answer
         self.distractors = [distractor1, distractor2, distractor3]
         return self.question_text, self.solution, self.distractors
 
     def generate_fraction_conversion(self):
         """
-        Generates a fraction-to-decimal conversion question with its correct solution and distractors.
-
+        Generates a fraction-to-decimal conversion question.
         Returns:
-            A tuple containing the question text and the solution.
+            tuple: (question text, solution, distractors)
         """
         denominator = random.randint(1, 1000)
         numerator = random.randint(1, denominator - 1)
         decimal = "0."
         self.question_text = f"Convert this fraction to a decimal: {numerator}/{denominator}"
-        # Start conversion process by multiplying numerator by 10
         num = numerator * 10
 
         while True:
-            # Pad with zeros if necessary
             while num < denominator:
                 decimal += "0"
                 num *= 10
 
             decimal += str(num // denominator)
-            num %= denominator  # update remainder
+            num %= denominator
 
-            if num == 0:  # terminating decimal
-                break
-
-            if len(decimal) > 13:  # limit decimal length
+            if num == 0 or len(decimal) > 13:
                 break
 
             num *= 10
 
-        correct_decimal = decimal
-        self.solution = correct_decimal
+        self.solution = decimal
 
-        # Distractor mistakes for conversion:
-        if correct_decimal[-1].isdigit():
-            last_digit = int(correct_decimal[-1])
+        # Generate slight variations as distractors
+        if decimal[-1].isdigit():
+            last_digit = int(decimal[-1])
             new_digit = (last_digit + 1) % 10
-            distractor1 = correct_decimal[:-1] + str(new_digit)
+            distractor1 = decimal[:-1] + str(new_digit)
         else:
-            distractor1 = correct_decimal
+            distractor1 = decimal
 
-        distractor2 = correct_decimal[:-1] if len(correct_decimal) > 3 else correct_decimal
-        distractor3 = correct_decimal + str(random.randint(0, 9))
+        distractor2 = decimal[:-1] if len(decimal) > 3 else decimal
+        distractor3 = decimal + str(random.randint(0, 9))
 
-        self.distractors = [
-            f"{distractor1}",
-            f"{distractor2}",
-            f"{distractor3}"
-        ]
+        self.distractors = [distractor1, distractor2, distractor3]
         return self.question_text, self.solution, self.distractors
 
 # Example usage:

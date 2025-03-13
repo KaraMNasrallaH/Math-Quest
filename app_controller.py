@@ -5,6 +5,7 @@ from PyQt5.QtGui import QIcon
 from UI.menu import MainMenu
 from UI.question_form_1 import QuestionForm1
 from Generators.fractionsQG import FractionQG
+from Generators.mixednumbersQG import MixedNumbersQG
 
 import ctypes
 import sys
@@ -37,8 +38,8 @@ class AppController(QMainWindow):
         """Handle topic selection from Main Menu."""
         if topic == "Fractions":
             self.question_generator = FractionQG()
-        else:
-            return
+        elif topic == "Mixed Numbers":
+            self.question_generator = MixedNumbersQG()
         self.generate_question_form()
     
     def generate_question_form(self):

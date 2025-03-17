@@ -46,6 +46,8 @@ class AppController(QMainWindow):
             self.question_generator = PercentsQG()
         elif topic == "Ratios && Proportions":
             self.question_generator = RatiosANDProportionQG()
+        else:
+            return
         self.generate_question_form()
     
     def generate_question_form(self):

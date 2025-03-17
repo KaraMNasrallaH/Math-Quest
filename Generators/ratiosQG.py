@@ -48,14 +48,19 @@ class RatiosANDProportionQG:
         multiplier = random.randint(2, 20)
         total = total_parts * multiplier
         result = total // total_parts
-        correct_apples = result * ratio_A
-        correct_oranges = result * ratio_B
+        correct_A = result * ratio_A
+        correct_B = result * ratio_B
 
-        self.question_text = (f"In a basket, the ratio of apples to oranges is {ratio_A}:{ratio_B}.\n"
-                              f"If there are {correct_apples} apples, how many oranges are there?")
-        self.solution = f"{correct_oranges}"
+        if random.random() > 0.4:
+            self.question_text = (f"In a basket, the ratio of apples to oranges is {ratio_A}:{ratio_B}\n"
+                                  f"If there are {correct_A} apples, how many oranges are there?")
+        else:
+            self.question_text = (f"The ratio of boys to girls in a class is {ratio_A}:{ratio_B}\n"
+                                  f"If there are {correct_A} boys, how many girls are there?")
+            
+        self.solution = f"{correct_B}"
         self.distractors = [
-            f"{correct_oranges + result}",
+            f"{correct_B + result}",
             f"{result * (ratio_B - 1)}",
             f"{result * (ratio_B + 2)}"
         ]

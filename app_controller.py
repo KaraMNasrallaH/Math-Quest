@@ -7,6 +7,7 @@ from UI.question_form_1 import QuestionForm1
 from Generators.fractionsQG import FractionQG
 from Generators.mixednumbersQG import MixedNumbersQG
 from Generators.percentsQG import PercentsQG
+from Generators.ratiosQG import RatiosANDProportionQG
 
 import ctypes
 import sys
@@ -43,6 +44,8 @@ class AppController(QMainWindow):
             self.question_generator = MixedNumbersQG()
         elif topic == "Percentages":
             self.question_generator = PercentsQG()
+        elif topic == "Ratios && Proportions":
+            self.question_generator = RatiosANDProportionQG()
         self.generate_question_form()
     
     def generate_question_form(self):

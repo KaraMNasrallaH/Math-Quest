@@ -174,7 +174,7 @@ class QuestionForm1(QWidget):
         # Adjust the calculator container size.
         self.calculator_container.setFixedSize(int(width * 0.3), int(height * 0.54))
         # Adjust the question title font size.
-        self.question_title.setFont(QFont("Arial", max(16, int(height * 0.035))))
+        self.question_title.setFont(QFont("Arial", min(int(height/30), int((height / len(self.question_title.text().split(" "))*0.6)))))
         # Update margins for top labels.
         self.top_labels_layout.setContentsMargins(
             int(self.base_size.width() * 0.03),

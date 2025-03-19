@@ -58,7 +58,7 @@ class PercentsQG:
     def percentage_change(self):
         original = random.randint(1, 200)
         new = random.randint(1, 400)
-        self.question_text = f"What is the percent change if the original is {original} and the new is {new}?"
+        self.question_text = f"What is the percent change\nif the original is {original} and the new is {new}?"
         change = new - original
         result = round((change / original) * 100)
         self.solution = f"{result}%"

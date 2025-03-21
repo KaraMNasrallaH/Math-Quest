@@ -31,6 +31,15 @@ class RatiosANDProportionQG:
             multiplier = random.randint(2,20)
             return ratio_A, ratio_B, multiplier
         return ratio_A, ratio_B
+    
+    def distractors_generator(self, result, title=False):
+        possible_offsets = list(range(1, 6))
+        unique_offsets = random.sample(possible_offsets, 3)
+        if title:
+            distractors = [f"{title}: {result + offset}" for offset in unique_offsets]
+        else:
+            distractors = [str(result + offset) for offset in unique_offsets]
+        return distractors
 
     def ratio(self):
         ratio_A, ratio_B, multiplier = self.ratio_generator(multiplier=True)
@@ -45,12 +54,12 @@ class RatiosANDProportionQG:
         correct_red = result * ratio_A
         correct_blue = result * ratio_B
         self.solution = f"Red: {correct_red}, Blue: {correct_blue}"
-        self.distractors = [
-            f"Red: {result * ratio_B}, Blue: {result * ratio_A}",
-            f"Red: {result * (ratio_A + 1)}, Blue: {result * (ratio_B - 1)}",
-            f"Red: {round(total / ratio_A)}, Blue: {round(total / ratio_B)}"
-        ]
-    
+
+        red_dis = self.distractors_generator(correct_red, title="Red")
+        blue_dis = self.distractors_generator(correct_blue, title="Blue")
+
+        self.distractors = [f"{red}, {blue}" for red, blue in zip(red_dis, blue_dis)]
+
     def ratio_part(self):
         ratio_A, ratio_B, multiplier = self.ratio_generator(multiplier=True)
 
@@ -68,7 +77,7 @@ class RatiosANDProportionQG:
                                   f"If there are {correct_A} boys, how many girls are there?")
             
         self.solution = f"{correct_B}"
-        self.distractors = [str(correct_B + random.randint(0,5)) for _ in range(3)]
+        self.distractors = self.distractors_generator(correct_B)
         
     def percent_ratio(self):
         ratio_A, ratio_B, multiplier = self.ratio_generator(multiplier=True)
@@ -90,9 +99,10 @@ class RatiosANDProportionQG:
             f"\ndecreases by {percent_B}%, the total becomes {total} cups. Determine the original amounts"
         )
         self.solution = f"{correct_A},{correct_B}"
+        A_dis = self.distractors_generator(correct_A)
+        B_dis = self.distractors_generator(correct_B)
         self.distractors = [
-            f"{correct_A + random.randint(0, 6)},{correct_B + random.randint(1, 6)}"
-            for _ in range(3)
+            f"{a},{b}" for a,b in zip(A_dis,B_dis) 
         ]
 
 

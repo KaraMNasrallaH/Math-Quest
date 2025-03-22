@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import (
     QPushButton, QHBoxLayout, QApplication
 )
 from PyQt5.QtCore import Qt, QSize, pyqtSignal
-from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QFont, QFontMetrics
 
 from Utils.calculator_widget import CalculatorWidget
 
@@ -38,7 +38,7 @@ class QuestionForm1(QWidget):
         self.base_size = QSize(800, 600)
         # List to store answer buttons.
         self.answer_buttons = []
-        self.solution_length = None
+        self.answer_length = None
 
         self.initUI()
 
@@ -121,7 +121,7 @@ class QuestionForm1(QWidget):
             question_data (dict): Dictionary containing keys 'question', 'solution', and 'distractors'.
         """
         self.correct_solution = question_data['solution']
-        self.solution_length = question_data["solution"].split()
+        self.answer_length = self.find_longest(question_data)
         self.question_title.setText(question_data['question'])
         # Combine the correct answer with distractors and randomize their order.
         choices = [question_data['solution']] + question_data['distractors']
@@ -155,6 +155,13 @@ class QuestionForm1(QWidget):
                     f"border: 3px solid #3CE217; color: white; padding: 6px; border-radius: 10px; "
                     "background-color: black; font-weight: bold; text-align: left;"
                 )
+    
+    def find_longest(self,question_data):
+        length = 0
+        for key,value in question_data.items():
+            if len(value) > length and key != "question":
+                length = len(str(value))
+        return length
 
     def next_button(self):
         """Emits the signal to load the next question."""
@@ -172,11 +179,11 @@ class QuestionForm1(QWidget):
         self.update_answer_buttons(width, height)
         self.update_navigation_buttons(width, height)
         self.update_labels(width, height)
+        self.update_question_title(width, height)
 
         # Adjust the calculator container size.
         self.calculator_container.setFixedSize(int(width * 0.3), int(height * 0.54))
-        # Adjust the question title font size.
-        self.question_title.setFont(QFont("Arial", min(int(height/30), int((height / len(self.question_title.text().split(" "))*0.6)))))
+
         # Update margins for top labels.
         self.top_labels_layout.setContentsMargins(
             int(self.base_size.width() * 0.03),
@@ -194,7 +201,7 @@ class QuestionForm1(QWidget):
         """Updates the size and font of answer buttons based on the current window size."""
         for btn in self.answer_buttons:
             btn.setFixedSize(int(width * 0.25), int(height * 0.07))
-            btn.setFont(QFont("Arial", min(int(height/30), int((height / len(self.solution_length)*0.07)))))
+            btn.setFont(QFont("Arial", min(int(height/30), int((((height/8) - self.answer_length))*0.15))))
 
     def update_navigation_buttons(self, width, height):
         """Updates the navigation buttons' (Next and Show) size and style."""
@@ -227,6 +234,23 @@ class QuestionForm1(QWidget):
         for label in [self.time_label, self.average_label, self.question_count_label]:
             label.setFixedSize(int(width * 0.3), int(height * 0.1))
             label.setFont(QFont("Arial", max(10, int(height * 0.022))))
+    
+    def update_question_title(self, width, height):
+        # Adjust the question title font size.
+        available_width = int(width * 0.9) 
+        font = QFont("Arial", 24)
+        fm = QFontMetrics(font)
+        longest_line = ""
+        for line in self.question_title.text().split("\n"):
+            if fm.width(line) > fm.width(longest_line):
+                longest_line = line
+        # Reduce font size until text fits within available width, with a minimum size threshold.
+        while fm.width(longest_line) > available_width and font.pointSize() > 10:
+            print(fm.width(self.question_title.text()))
+            font.setPointSize(font.pointSize() - 1)
+            fm = QFontMetrics(font)
+
+        self.question_title.setFont(font)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

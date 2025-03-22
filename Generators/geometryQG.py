@@ -24,10 +24,12 @@ class GeometryQG:
         self.question_text = selected_question["question"]
         self.solution = selected_question["solution"]
         self.distractors = selected_question["distractors"]
-        print(self.question_text)
-        print(self.solution)
-        print(self.distractors)
+
         
         
 if __name__ == "__main__":
     test = GeometryQG()
+    question_data = test.generate()
+    print(question_data["question"])
+    print(question_data["solution"])
+    print(question_data["distractors"])

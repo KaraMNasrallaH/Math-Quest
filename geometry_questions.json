@@ -1,0 +1,633 @@
+[
+    {
+        "question": "What is a point in geometry?",
+        "solution": "A location with no size.",
+        "distractors": [
+            "A small shape.",
+            "A short line.",
+            "An intersection."
+        ]
+    },
+    {
+        "question": "What is the difference between a line and a line segment?",
+        "solution": "A line is infinite; a segment has endpoints.",
+        "distractors": [
+            "A segment is infinite.",
+            "They are the same.",
+            "A segment forms a shape."
+        ]
+    },
+    {
+        "question": "How do we name a line?",
+        "solution": "With two points or a lowercase letter.",
+        "distractors": [
+            "With three points.",
+            "With a capital letter.",
+            "By its length."
+        ]
+    },
+    {
+        "question": "What is a plane in geometry?",
+        "solution": "A flat surface extending infinitely.",
+        "distractors": [
+            "A 3D object.",
+            "A shape with edges.",
+            "A closed space."
+        ]
+    },
+    {
+        "question": "What does collinear mean?",
+        "solution": "Points on the same line.",
+        "distractors": [
+            "Points forming a shape.",
+            "Points at equal distance.",
+            "At least three points."
+        ]
+    },
+    {
+        "question": "What does coplanar mean?",
+        "solution": "Points in the same plane.",
+        "distractors": [
+            "Points in a triangle.",
+            "Points on one line.",
+            "At least four points."
+        ]
+    },
+    {
+        "question": "How many points define a line?",
+        "solution": "Two.",
+        "distractors": [
+            "One.",
+            "Three.",
+            "Four."
+        ]
+    },
+    {
+        "question": "How many points define a plane?",
+        "solution": "Three non-collinear points.",
+        "distractors": [
+            "Two non-collinear points.",
+            "Four non-collinear points.",
+            "One non-collinear point."
+        ]
+    },
+    {
+        "question": "What is the difference between parallel and intersecting lines?",
+        "solution": "Parallel never meet; intersecting cross.",
+        "distractors": [
+            "intersecting lines meet; Parallel cross.",
+            "Intersecting got three points; parallel got two.",
+            "Parallel lines curve."
+        ]
+    },
+    {
+        "question": "Can two planes intersect?",
+        "solution": "Yes, they form a line.",
+        "distractors": [
+            "No, they never intersect.",
+            "Yes, they meet at a point.",
+            "Yes, they form a new plane."
+        ]
+    },
+    {
+        "question": "What is an angle, and how is it formed?",
+        "solution": "The space between two rays with a common endpoint.",
+        "distractors": [
+            "The space between two lines.",
+            "The distance between two points.",
+            "The intersection of two planes."
+        ]
+    },
+    {
+        "question": "What are the two main parts of an angle?",
+        "solution": "Two rays and a vertex.",
+        "distractors": [
+            "Two lines and a midpoint.",
+            "Two segments and an endpoint.",
+            "A base and a height."
+        ]
+    },
+    {
+        "question": "How do we measure angles, and what unit do we use?",
+        "solution": "Using a protractor in degrees.",
+        "distractors": [
+            "With a ruler in centimeters.",
+            "Using a compass in radians.",
+            "By comparing with a square."
+        ]
+    },
+    {
+        "question": "What are the four main types of angles based on their measurements?",
+        "solution": "Acute, right, obtuse, straight.",
+        "distractors": [
+            "Small, medium, large, full.",
+            "Minor, major, central, exterior.",
+            "Positive, negative, zero, reflex."
+        ]
+    },
+    {
+        "question": "What is a right angle, and how many degrees does it have?",
+        "solution": "An angle of 90°.",
+        "distractors": [
+            "An angle less than 90°.",
+            "An angle more than 90°.",
+            "An angle of 180°."
+        ]
+    },
+    {
+        "question": "What is an acute angle?",
+        "solution": "An angle less than 90°.",
+        "distractors": [
+            "An angle exactly 90°.",
+            "An angle more than 90°.",
+            "An angle of 180°."
+        ]
+    },
+    {
+        "question": "What is an obtuse angle?",
+        "solution": "An angle more than 90° but less than 180°.",
+        "distractors": [
+            "An angle less than 90°.",
+            "An angle exactly 180°.",
+            "An angle more than 180°."
+        ]
+    },
+    {
+        "question": "What is a straight angle, and how many degrees does it measure?",
+        "solution": "An angle of 180°.",
+        "distractors": [
+            "An angle of 90°.",
+            "An angle of 360°.",
+            "An angle less than 180°."
+        ]
+    },
+    {
+        "question": "What tool is commonly used to measure angles?",
+        "solution": "A protractor.",
+        "distractors": [
+            "A compass.",
+            "A ruler.",
+            "A triangle."
+        ]
+    },
+    {
+        "question": "What does it mean when two angles are complementary?",
+        "solution": "Their sum is 90°.",
+        "distractors": [
+            "Their sum is 180°.",
+            "They are equal in measure.",
+            "They form a straight angle."
+        ]
+    },
+    {
+        "question": "What does it mean when two angles are supplementary?",
+        "solution": "Their sum is 180°.",
+        "distractors": [
+            "Their sum is 90°.",
+            "They are equal in measure.",
+            "They form a right angle."
+        ]
+    },
+    {
+        "question": "If one angle is 70°, what is the measure of its complementary angle?",
+        "solution": "20°.",
+        "distractors": [
+            "110°.",
+            "70°.",
+            "90°."
+        ]
+    },
+    {
+        "question": "If one angle is 110°, what is the measure of its supplementary angle?",
+        "solution": "70°.",
+        "distractors": [
+            "110°.",
+            "90°.",
+            "180°."
+        ]
+    },
+    {
+        "question": "What is the sum of all angles in a triangle?",
+        "solution": "180°.",
+        "distractors": [
+            "90°.",
+            "270°.",
+            "360°."
+        ]
+    },
+    {
+        "question": "What do we call two angles that share a common side and a common vertex?",
+        "solution": "Adjacent angles.",
+        "distractors": [
+            "Vertical angles.",
+            "Complementary angles.",
+            "Opposite angles."
+        ]
+    },
+    {
+        "question": "What is a 'degree' in angle measurement?",
+        "solution": "A unit used to measure angles.",
+        "distractors": [
+            "A unit of length.",
+            "A measure of temperature.",
+            "A type of geometric shape."
+        ]
+    },
+    {
+        "question": "How many degrees are in a full circle?",
+        "solution": "360°.",
+        "distractors": [
+            "180°.",
+            "90°.",
+            "270°."
+        ]
+    },
+    {
+        "question": "How many degrees are in a half-circle (a straight angle)?",
+        "solution": "180°.",
+        "distractors": [
+            "360°.",
+            "90°.",
+            "270°."
+        ]
+    },
+    {
+        "question": "What is the name of the tool used to measure angles?",
+        "solution": "Protractor.",
+        "distractors": [
+            "Compass.",
+            "Ruler.",
+            "Set square."
+        ]
+    },
+    {
+        "question": "How many degrees does each quadrant of a circle have?",
+        "solution": "90°.",
+        "distractors": [
+            "45°.",
+            "180°.",
+            "60°."
+        ]
+    },
+    {
+        "question": "If an angle measures 45°, what type of angle is it?",
+        "solution": "Acute.",
+        "distractors": [
+            "Right.",
+            "Obtuse.",
+            "Straight."
+        ]
+    },
+    {
+        "question": "If an angle measures 270°, what part of the circle does it represent?",
+        "solution": "Three-fourths of a circle.",
+        "distractors": [
+            "One-fourth of a circle.",
+            "Half of a circle.",
+            "A full circle."
+        ]
+    },
+    {
+        "question": "What are the four main types of angles based on their degrees?",
+        "solution": "Acute, right, obtuse, straight.",
+        "distractors": [
+            "Small, medium, large, full.",
+            "Positive, negative, zero, reflex.",
+            "Minor, major, central, exterior."
+        ]
+    },
+    {
+        "question": "If an angle measures 15°, what type of angle is it?",
+        "solution": "Acute.",
+        "distractors": [
+            "Right.",
+            "Obtuse.",
+            "Straight."
+        ]
+    },
+    {
+        "question": "What is the difference between a reflex angle and an obtuse angle?",
+        "solution": "Reflex > 180°, obtuse 90°-180°.",
+        "distractors": [
+            "A reflex angle is less than 90°.",
+            "An obtuse angle is more than 180°.",
+            "They are both the same."
+        ]
+    },
+    {
+        "question": "What is the measure of a right angle?",
+        "solution": "90°.",
+        "distractors": [
+            "45°.",
+            "180°.",
+            "270°."
+        ]
+    },
+    {
+        "question": "If an angle measures 120°, what type of angle is it?",
+        "solution": "Obtuse.",
+        "distractors": [
+            "Acute.",
+            "Right.",
+            "Straight."
+        ]
+    },
+    {
+        "question": "What is the measure of a straight angle?",
+        "solution": "180°.",
+        "distractors": [
+            "90°.",
+            "360°.",
+            "270°."
+        ]
+    },
+    {
+        "question": "If an angle measures 360°, what does that represent?",
+        "solution": "A full rotation.",
+        "distractors": [
+            "A right angle.",
+            "A straight line.",
+            "A half-circle."
+        ]
+    },
+    {
+        "question": "If an angle measures 95°, is it acute, right, or obtuse?",
+        "solution": "Obtuse.",
+        "distractors": [
+            "Acute.",
+            "Right.",
+            "Straight."
+        ]
+    },
+    {
+        "question": "What is a polygon?",
+        "solution": "A closed shape with straight sides.",
+        "distractors": [
+            "A shape with curved sides.",
+            "A 3D solid shape.",
+            "A figure with only three sides."
+        ]
+    },
+    {
+        "question": "What are the basic rules a shape must follow to be considered a polygon?",
+        "solution": "Closed, straight sides, no curves.",
+        "distractors": [
+            "Any number of sides, open or closed.",
+            "At least four sides, any shape.",
+            "Must have curved sides and angles."
+        ]
+    },
+    {
+        "question": "How many sides does a triangle have?",
+        "solution": "3.",
+        "distractors": [
+            "4.",
+            "5.",
+            "6."
+        ]
+    },
+    {
+        "question": "What do we call a four-sided polygon?",
+        "solution": "Quadrilateral.",
+        "distractors": [
+            "Pentagon.",
+            "Hexagon.",
+            "Triangle."
+        ]
+    },
+    {
+        "question": "What do we call a five-sided polygon?",
+        "solution": "Pentagon.",
+        "distractors": [
+            "Hexagon.",
+            "Quadrilateral.",
+            "Octagon."
+        ]
+    },
+    {
+        "question": "What do we call a six-sided polygon?",
+        "solution": "Hexagon.",
+        "distractors": [
+            "Pentagon.",
+            "Octagon.",
+            "Heptagon."
+        ]
+    },
+    {
+        "question": "What is the difference between a regular and irregular polygon?",
+        "solution": "Regular has equal sides and angles.",
+        "distractors": [
+            "Irregular has curved sides.",
+            "Regular has more than 4 sides.",
+            "Irregular is always concave."
+        ]
+    },
+    {
+        "question": "What do we call an eight-sided polygon?",
+        "solution": "Octagon.",
+        "distractors": [
+            "Heptagon.",
+            "Hexagon.",
+            "Decagon."
+        ]
+    },
+    {
+        "question": "What do we call a ten-sided polygon?",
+        "solution": "Decagon.",
+        "distractors": [
+            "Hexagon.",
+            "Octagon.",
+            "Nonagon."
+        ]
+    },
+    {
+        "question": "What is the sum of the interior angles of a triangle?",
+        "solution": "180°.",
+        "distractors": [
+            "360°.",
+            "90°.",
+            "270°."
+        ]
+    },
+    {
+        "question": "What is the formula to calculate the sum of interior angles of any polygon?",
+        "solution": "(n-2) × 180°.",
+        "distractors": [
+            "(n-1) × 90°.",
+            "n × 180°.",
+            "(n-2) × 360°."
+        ]
+    },
+    {
+        "question": "What do we call a polygon where all sides and angles are equal?",
+        "solution": "Regular polygon.",
+        "distractors": [
+            "Concave polygon.",
+            "Irregular polygon.",
+            "Quadrilateral."
+        ]
+    },
+    {
+        "question": "What is a concave polygon?",
+        "solution": "A polygon with at least one inward angle.",
+        "distractors": [
+            "A polygon with only right angles.",
+            "A polygon with no equal sides.",
+            "A polygon with all equal angles."
+        ]
+    },
+    {
+        "question": "What is a convex polygon?",
+        "solution": "A polygon where all angles point outward.",
+        "distractors": [
+            "A polygon with curved sides.",
+            "A polygon with an inward angle.",
+            "A polygon with 90° angles only."
+        ]
+    },
+    {
+        "question": "Can a polygon have curved sides? Why or why not?",
+        "solution": "No, polygons must have straight sides.",
+        "distractors": [
+            "Yes, some have curved sides.",
+            "Only regular polygons can have curves.",
+            "Yes, if they have more than four sides."
+        ]
+    },
+    {
+        "question": "What is a triangle?",
+        "solution": "A polygon with 3 sides.",
+        "distractors": [
+            "A shape with 4 sides.",
+            "A polygon with curved edges.",
+            "A shape with 2 sides."
+        ]
+    },
+    {
+        "question": "How many sides and angles does a triangle have?",
+        "solution": "3 sides, 3 angles.",
+        "distractors": [
+            "4 sides, 4 angles.",
+            "3 sides, 4 angles.",
+            "2 sides, 3 angles."
+        ]
+    },
+    {
+        "question": "What is the sum of the interior angles of any triangle?",
+        "solution": "180°.",
+        "distractors": [
+            "360°.",
+            "90°.",
+            "270°."
+        ]
+    },
+    {
+        "question": "What are the three main types of triangles based on side lengths?",
+        "solution": "Equilateral, isosceles, scalene.",
+        "distractors": [
+            "Acute, right, obtuse.",
+            "Parallel, perpendicular, intersecting.",
+            "Square, rectangle, trapezoid."
+        ]
+    },
+    {
+        "question": "What are the three main types of triangles based on angle measures?",
+        "solution": "Acute, right, obtuse.",
+        "distractors": [
+            "Equilateral, isosceles, scalene.",
+            "Regular, irregular, convex.",
+            "Quadrilateral, pentagon, hexagon."
+        ]
+    },
+    {
+        "question": "What is an equilateral triangle?",
+        "solution": "A triangle with 3 equal sides.",
+        "distractors": [
+            "A triangle with 2 equal sides.",
+            "A triangle with all different sides.",
+            "A triangle with one right angle."
+        ]
+    },
+    {
+        "question": "What is an isosceles triangle?",
+        "solution": "A triangle with 2 equal sides.",
+        "distractors": [
+            "A triangle with all equal sides.",
+            "A triangle with all different sides.",
+            "A triangle with only right angles."
+        ]
+    },
+    {
+        "question": "What is a scalene triangle?",
+        "solution": "A triangle with no equal sides.",
+        "distractors": [
+            "A triangle with 3 equal sides.",
+            "A triangle with 2 equal sides.",
+            "A triangle with one 90° angle."
+        ]
+    },
+    {
+        "question": "What is an acute triangle?",
+        "solution": "A triangle with all angles < 90°.",
+        "distractors": [
+            "A triangle with one 90° angle.",
+            "A triangle with one angle > 90°.",
+            "A triangle with all angles = 90°."
+        ]
+    },
+    {
+        "question": "What is a right triangle?",
+        "solution": "A triangle with one 90° angle.",
+        "distractors": [
+            "A triangle with all angles < 90°.",
+            "A triangle with all sides equal.",
+            "A triangle with one angle > 90°."
+        ]
+    },
+    {
+        "question": "What is an obtuse triangle?",
+        "solution": "A triangle with one angle > 90°.",
+        "distractors": [
+            "A triangle with all angles < 90°.",
+            "A triangle with one 90° angle.",
+            "A triangle with three right angles."
+        ]
+    },
+    {
+        "question": "What is the longest side of a right triangle called?",
+        "solution": "Hypotenuse.",
+        "distractors": [
+            "Base.",
+            "Altitude.",
+            "Median."
+        ]
+    },
+    {
+        "question": "What is the name of the special formula used for right triangles?",
+        "solution": "Pythagorean theorem.",
+        "distractors": [
+            "Triangle area formula.",
+            "Sum of angles theorem.",
+            "Midpoint formula."
+        ]
+    },
+    {
+        "question": "Can a triangle have two right angles? Why or why not?",
+        "solution": "No, sum would exceed 180°.",
+        "distractors": [
+            "Yes, if the sides are equal.",
+            "Yes, in an equilateral triangle.",
+            "No, but it can have three."
+        ]
+    },
+    {
+        "question": "If one angle in a triangle is 90°, what type of triangle is it?",
+        "solution": "Right triangle.",
+        "distractors": [
+            "Acute triangle.",
+            "Obtuse triangle.",
+            "Equilateral triangle."
+        ]
+    }
+
+]

@@ -38,6 +38,7 @@ class QuestionForm1(QWidget):
         self.base_size = QSize(800, 600)
         # List to store answer buttons.
         self.answer_buttons = []
+        self.solution_length = None
 
         self.initUI()
 
@@ -120,6 +121,7 @@ class QuestionForm1(QWidget):
             question_data (dict): Dictionary containing keys 'question', 'solution', and 'distractors'.
         """
         self.correct_solution = question_data['solution']
+        self.solution_length = question_data["solution"].split()
         self.question_title.setText(question_data['question'])
         # Combine the correct answer with distractors and randomize their order.
         choices = [question_data['solution']] + question_data['distractors']
@@ -192,7 +194,7 @@ class QuestionForm1(QWidget):
         """Updates the size and font of answer buttons based on the current window size."""
         for btn in self.answer_buttons:
             btn.setFixedSize(int(width * 0.25), int(height * 0.07))
-            btn.setFont(QFont("Arial", max(12, int(height * 0.025))))
+            btn.setFont(QFont("Arial", min(int(height/30), int((height / len(self.solution_length)*0.07)))))
 
     def update_navigation_buttons(self, width, height):
         """Updates the navigation buttons' (Next and Show) size and style."""

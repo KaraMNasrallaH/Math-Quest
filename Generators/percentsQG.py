@@ -8,7 +8,7 @@ class PercentsQG:
         self.distractors = []
         self.question_type = None
     
-    def generate_distractors(self, result, is_percent=False):
+    def distractors_generator(self, result, is_percent=False):
         # Generate 3 unique offsets (excluding 0) and apply them
         offsets = random.sample([x for x in range(-5, 6) if x != 0], 3)
         distractors = [result + offset for offset in offsets]
@@ -37,7 +37,7 @@ class PercentsQG:
         self.question_text = f"What is {percent}% of {total}?"
         result = round(total * percent / 100)
         self.solution = f"{result}"
-        self.distractors = self.generate_distractors(result)
+        self.distractors = self.distractors_generator(result)
     
     def find_percentage(self):
         total = random.randint(1, 500)
@@ -45,7 +45,7 @@ class PercentsQG:
         self.question_text = f"What percent is {part} of {total}?"
         result = round(part / total * 100)
         self.solution = f"{result}%"
-        self.distractors = self.generate_distractors(result, is_percent=True)
+        self.distractors = self.distractors_generator(result, is_percent=True)
     
     def find_total(self):
         part = random.randint(1, 100)
@@ -53,7 +53,7 @@ class PercentsQG:
         self.question_text = f"If {part} is {percent}%, then what is the total?"
         result = round((part * 100) / percent)
         self.solution = f"{result}"
-        self.distractors = self.generate_distractors(result)
+        self.distractors = self.distractors_generator(result)
     
     def percentage_change(self):
         original = random.randint(1, 200)
@@ -62,7 +62,7 @@ class PercentsQG:
         change = new - original
         result = round((change / original) * 100)
         self.solution = f"{result}%"
-        self.distractors = self.generate_distractors(result, is_percent=True)
+        self.distractors = self.distractors_generator(result, is_percent=True)
 
 if __name__ == "__main__":
     test = PercentsQG()

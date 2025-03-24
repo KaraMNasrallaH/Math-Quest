@@ -7,9 +7,9 @@ class FractionQG:
     """
 
     def __init__(self):
-        self.question_type = ""
-        self.question_text = ""
-        self.solution = ""
+        self.question_type = None
+        self.question_text = None
+        self.solution = None
         self.distractors = []
 
     def generate(self):

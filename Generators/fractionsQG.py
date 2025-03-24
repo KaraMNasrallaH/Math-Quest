@@ -34,7 +34,6 @@ class FractionQG:
             self.generate_fraction_conversion()
 
         return {
-            "type": self.question_type,
             "question": self.question_text,
             "solution": self.solution,
             "distractors": self.distractors
@@ -184,7 +183,6 @@ class FractionQG:
 if __name__ == "__main__":
     fqg = FractionQG()
     question_data = fqg.generate()
-    print("Question Type:", question_data["type"])
     print("Question:", question_data["question"])
     print("Solution:", question_data["solution"])
     print("Distractors:", question_data["distractors"])

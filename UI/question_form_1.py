@@ -246,7 +246,6 @@ class QuestionForm1(QWidget):
                 longest_line = line
         # Reduce font size until text fits within available width, with a minimum size threshold.
         while fm.width(longest_line) > available_width and font.pointSize() > 10:
-            print(fm.width(self.question_title.text()))
             font.setPointSize(font.pointSize() - 1)
             fm = QFontMetrics(font)
 

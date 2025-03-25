@@ -10,6 +10,7 @@ from Generators.percentsQG import PercentsQG
 from Generators.ratiosQG import RatiosANDProportionQG
 from Generators.geometryQG import GeometryQG
 from Generators.integer_arithemticQG import Integer_ArithmeticQG
+from Generators.exponents import ExponentsQG
 
 import ctypes
 import sys
@@ -51,7 +52,9 @@ class AppController(QMainWindow):
         elif topic == "Geometry":
             self.question_generator = GeometryQG()
         elif topic == "Integer Arithmetic":
-            self. question_generator = Integer_ArithmeticQG()
+            self.question_generator = Integer_ArithmeticQG()
+        elif topic == "Exponents":
+            self.question_generator = ExponentsQG()
         else:
             return
         self.generate_question_form()

@@ -10,11 +10,15 @@ class GeometryQG:
         self.distractors = None
         
     def generate(self):
-        self.question_type = random.choice(["geometry_info","find_perimeter"])
+        self.question_type = random.choice(["geometry_info","find_perimeter","angle_relation","find_area"])
         if self.question_type == "geometry_info":
             self.geometry_info()
         elif self.question_type == "find_perimeter":
             self.find_perimeter()
+        elif self.question_type == "angle_relation":
+            self.angle_relation()
+        elif self.question_type == "find_area":
+            self.find_area()
         return{
             "question": self.question_text,
             "solution": self.solution,
@@ -66,6 +70,31 @@ class GeometryQG:
             result = a*2*math.pi
         self.solution = str(round(result, 2)) if isinstance(result, float) and not result.is_integer() else str(int(result))
         self.distractors = self.distractors_generator(result)
+    
+    def angle_relation(self):
+        angle_type = random.choice(["complementary","supplementary"])
+        if angle_type == "complementary":
+            a = random.randint(10,50)
+            result = 90 - a
+        else:
+            a = random.randint(40,140)
+            result = 180 - a
+        self.question_text = f"Two angles are {angle_type}. If one is {a}°, find the other"
+        self.solution = f"{result}°"
+        A_dis = self.distractors_generator(result)
+        self.distractors = [f"{angle}°" for angle in A_dis]
+    
+    def find_area(self):
+        a = random.randint(5, 10) * 2
+        b = random.randint(5, 10)
+        self.question_text = f"The base of a triangle is {a} cm, and its height is {b} cm. Find the area."
+        result = (a*b) //2
+        self.solution = f"{result} cm\u00B2"
+        A_dis = self.distractors_generator(result)
+        self.distractors = [f"{a} cm\u00B2" for a in A_dis]
+
+
+
 
         
         

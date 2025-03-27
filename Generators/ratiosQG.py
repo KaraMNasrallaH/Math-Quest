@@ -99,10 +99,10 @@ class RatiosANDProportionQG(DistractorsGenerator):
             f"Ingredients are in a {ratio_A}:{ratio_B} ratio. If ingredient A increases by {percent_A}% and ingredient B"
             f"\ndecreases by {percent_B}%, the total becomes {total} cups. Determine the original amounts"
         )
-        self.solution = f"{correct_A},{correct_B}"
+        self.solution = f"A: {correct_A}, B: {correct_B}"
         A_dis = self.distractors_generator(correct_A)
         B_dis = self.distractors_generator(correct_B)
-        self.distractors = [f"A:{a},B:{b}" for a,b in zip(A_dis,B_dis) ]
+        self.distractors = [f"A: {a}, B: {b}" for a,b in zip(A_dis,B_dis) ]
 
 
 

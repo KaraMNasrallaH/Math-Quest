@@ -29,7 +29,7 @@ class GeometryQG(DistractorsGenerator):
         }
         
     def geometry_info(self):
-        with open("geometry_questions.json", "r", encoding="utf-8") as file:
+        with open("Generators//geometry_questions.json", "r", encoding="utf-8") as file:
             questions = json.load(file)
         selected_question = random.choice(questions)
         self.question_text = selected_question["question"]
@@ -80,8 +80,20 @@ class GeometryQG(DistractorsGenerator):
     def find_area(self):
         a = random.randint(5, 10) * 2
         b = random.randint(5, 10)
-        self.question_text = f"The base of a triangle is {a} cm, and its height is {b} cm. Find the area."
-        result = (a*b) //2
+        if self.shape == "triangle":
+            self.question_text = f"The base of a triangle is {a} cm, and its height is {b} cm. Find the area."
+            result = int((a*b) /2)
+        elif self.shape == "square":
+            self.question_text = f"A square has a side length of {a} cm. What is its area"
+            result = a*a
+        elif self.shape == "rectangle":
+            self.question_text = f"A rectangle has a length of {a} cm and a width of {b} cm. What is its area?"
+            result = a*b
+        elif self.shape == "circle":
+            self.question_text = f"A circle has a diameter of {a} cm. What is its area?"
+            radius = a/2
+            result = round((radius * radius) * math.pi,2)
+
         self.solution = f"{result} cm\u00B2"
         A_dis = self.distractors_generator(result)
         self.distractors = [f"{a} cm\u00B2" for a in A_dis]

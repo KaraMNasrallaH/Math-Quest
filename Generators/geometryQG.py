@@ -1,8 +1,10 @@
 import random
 import json
 import math
+from Generators.distractors_generator import DistractorsGenerator
 
-class GeometryQG:
+
+class GeometryQG(DistractorsGenerator):
     def __init__(self):
         self.question_text = None
         self.solution = None
@@ -11,6 +13,7 @@ class GeometryQG:
         
     def generate(self):
         self.question_type = random.choice(["geometry_info","find_perimeter","angle_relation","find_area"])
+        self.shape = random.choice(["square","rectangle","triangle","circle"])
         if self.question_type == "geometry_info":
             self.geometry_info()
         elif self.question_type == "find_perimeter":
@@ -24,15 +27,6 @@ class GeometryQG:
             "solution": self.solution,
             "distractors": self.distractors
         }
-    
-    def distractors_generator(self, result, title=False):
-        possible_offsets = list(range(1, 6))
-        unique_offsets = random.sample(possible_offsets, 3)
-        if title:
-            distractors = [f"{title}: {result + offset}" for offset in unique_offsets]
-        else:
-            distractors = [str(round(result + offset, 2)) if isinstance(result, float) else str(result + offset) for offset in unique_offsets]
-        return distractors
         
     def geometry_info(self):
         with open("geometry_questions.json", "r", encoding="utf-8") as file:
@@ -43,8 +37,7 @@ class GeometryQG:
         self.distractors = selected_question["distractors"]
 
     def find_perimeter(self):
-        shape = random.choice(["square","rectangle","triangle","circle"])
-        if shape == "square":
+        if self.shape == "square":
             a = random.randint(1,10)
             if random.random() > 0.5:
                 self.question_text = f"A square has a side length of {a} cm. What is its perimeter"
@@ -53,18 +46,18 @@ class GeometryQG:
                 self.question_text = f"A regular pentagon has a side of {a} cm. What is its perimeter"
                 result = a*5
 
-        elif shape == "rectangle":
+        elif self.shape == "rectangle":
             a = random.randint(10,20)
             b = random.randint(5,a-2)
             self.question_text = f"A rectangle has a length of {b} cm and a width of {a} cm. What is its perimeter"
             result = a*2+b*2
 
-        elif shape == "triangle":
+        elif self.shape == "triangle":
             a,b,c = (random.randint(3,15) for _ in range(3))
             self.question_text = f"A triangle has sides measuring {a} cm, {b} cm, and {c} cm. What is its perimeter"
             result = a+b+c
 
-        elif shape == "circle":
+        elif self.shape == "circle":
             a = random.randint(3,10)
             self.question_text = f"If a circle has a radius of {a} cm, what is its circumference"
             result = a*2*math.pi

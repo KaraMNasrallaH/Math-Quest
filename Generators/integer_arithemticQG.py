@@ -1,6 +1,7 @@
 import random
+from Generators.distractors_generator import DistractorsGenerator
 
-class Integer_ArithmeticQG:
+class Integer_ArithmeticQG(DistractorsGenerator):
     def __init__(self):
         self.question_text = None
         self.solution = None
@@ -20,15 +21,6 @@ class Integer_ArithmeticQG:
             "solution": self.solution,
             "distractors": self.distractors
         }
-            
-    def distractors_generator(self, result, title=False):
-        possible_offsets = list(range(1, 6))
-        unique_offsets = random.sample(possible_offsets, 3)
-        if title:
-            distractors = [f"{title}: {result + offset}" for offset in unique_offsets]
-        else:
-            distractors = [str(round(result + offset, 2)) if isinstance(result, float) else str(result + offset) for offset in unique_offsets]
-        return distractors
     
     def adding_subtracting(self):
         a = random.randint(-10,10)

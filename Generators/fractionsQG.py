@@ -1,6 +1,6 @@
 import random
 
-class FractionQG:
+class FractionQG():
     """
     Generates fraction questions with solutions and distractors.
     Supported types: addition/subtraction, multiplication, simplification, division, and conversion.

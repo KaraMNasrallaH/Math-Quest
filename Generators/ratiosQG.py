@@ -1,6 +1,7 @@
 import random
+from Generators.distractors_generator import DistractorsGenerator
 
-class RatiosANDProportionQG:
+class RatiosANDProportionQG(DistractorsGenerator):
     def __init__(self):
         self.question_text = None
         self.solution = None
@@ -101,9 +102,7 @@ class RatiosANDProportionQG:
         self.solution = f"{correct_A},{correct_B}"
         A_dis = self.distractors_generator(correct_A)
         B_dis = self.distractors_generator(correct_B)
-        self.distractors = [
-            f"{a},{b}" for a,b in zip(A_dis,B_dis) 
-        ]
+        self.distractors = [f"A:{a},B:{b}" for a,b in zip(A_dis,B_dis) ]
 
 
 

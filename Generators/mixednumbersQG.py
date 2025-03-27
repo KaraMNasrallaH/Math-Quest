@@ -1,7 +1,8 @@
 import random
 from math import gcd as find_gcd
+from Generators.distractors_generator import DistractorsGenerator
 
-class MixedNumbersQG:
+class MixedNumbersQG(DistractorsGenerator):
     def __init__(self):
         self.question_text = None
         self.solution = None

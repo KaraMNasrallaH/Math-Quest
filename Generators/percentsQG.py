@@ -1,18 +1,13 @@
 import random
+from Generators.distractors_generator import DistractorsGenerator
 
-class PercentsQG:
+class PercentsQG(DistractorsGenerator):
     def __init__(self):
         # Initialize attributes
         self.question_text = None
         self.solution = None
         self.distractors = []
         self.question_type = None
-    
-    def distractors_generator(self, result, is_percent=False):
-        # Generate 3 unique offsets (excluding 0) and apply them
-        offsets = random.sample([x for x in range(-5, 6) if x != 0], 3)
-        distractors = [result + offset for offset in offsets]
-        return [f"{d}%" for d in distractors] if is_percent else [str(d) for d in distractors]
 
     def generate(self):
         # Choose a random question type and generate the question
@@ -45,7 +40,7 @@ class PercentsQG:
         self.question_text = f"What percent is {part} of {total}?"
         result = round(part / total * 100)
         self.solution = f"{result}%"
-        self.distractors = self.distractors_generator(result, is_percent=True)
+        self.distractors = [f"{a}%" for a in self.distractors_generator(result)]
     
     def find_total(self):
         part = random.randint(1, 100)
@@ -62,7 +57,7 @@ class PercentsQG:
         change = new - original
         result = round((change / original) * 100)
         self.solution = f"{result}%"
-        self.distractors = self.distractors_generator(result, is_percent=True)
+        self.distractors = [f"{a}%" for a in self.distractors_generator(result)]
 
 if __name__ == "__main__":
     test = PercentsQG()

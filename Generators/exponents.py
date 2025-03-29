@@ -12,9 +12,11 @@ class ExponentsQG(DistractorsGenerator):
         self.question_type = None
     
     def generate(self):
-        self.question_type = random.choice(["simplest_radical"])
-        if self.question_type == "simplest_radical":
+        self.question_type = random.choice(["simplest radical","hidden power"])
+        if self.question_type == "simplest radical":
             self.simplest_radical()
+        elif self.question_type == "hidden power":
+            self.hidden_power()
         return {
             "question":self.question_text,
             "solution":self.solution,
@@ -56,6 +58,13 @@ class ExponentsQG(DistractorsGenerator):
             self.solution = f"{outside}√{inside}"
             A_dis = self.distractors_generator(outside)
             self.distractors = [f"{a}√{inside}" for a in A_dis]
+
+    def hidden_power(self):
+        a = random.randint(2,9)
+        b = random.randint(0,5)
+        self.question_text = f"If {a}^x = {a**b}, what is x?"
+        self.solution = str(b)
+        self.distractors = self.distractors_generator(b)
 
 if __name__ == "__main__":
     test = ExponentsQG()

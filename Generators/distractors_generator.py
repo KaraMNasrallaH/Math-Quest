@@ -1,19 +1,16 @@
 import random
 
 class DistractorsGenerator:
-    def distractors_generator(self, result, title=False):
-        possible_offsets = list(range(1, 6))
-        unique_offsets = random.sample(possible_offsets, 3)
-        operator = random.choice(["+","-"])
+    def distractors_generator(self, result, value=3, title=False):
+        offsets = random.sample(range(1, 6), value)
+        sign = 1 if random.choice(["+", "-"]) == "+" else -1
+        
+        distractors = [result + sign * offset for offset in offsets]
+        
+        if isinstance(result, float):
+            distractors = [round(val, 2) for val in distractors]
+
         if title:
-            if operator == "+":
-                return [f"{title}: {result + offset}" for offset in unique_offsets]
-            else:
-                return [f"{title}: {result - offset}" for offset in unique_offsets]
+            return [f"{title}: {val}" for val in distractors]
         else:
-            if operator == "+":
-                return [
-                    str(round(result + offset, 2)) if isinstance(result, float) else str(result + offset) for offset in unique_offsets]
-            else:
-                return [
-                    str(round(result - offset, 2)) if isinstance(result, float) else str(result - offset) for offset in unique_offsets]
+            return [str(val) for val in distractors]

@@ -12,7 +12,7 @@ class GeometryQG(DistractorsGenerator):
         self.distractors = None
         
     def generate(self):
-        self.question_type = random.choice(["geometry_info","find_perimeter","angle_relation","find_area"])
+        self.question_type = random.choice(["geometry_info","find_perimeter","angle_relation","find_area","find_volume"])
         self.shape = random.choice(["square","rectangle","triangle","circle"])
         if self.question_type == "geometry_info":
             self.geometry_info()
@@ -22,6 +22,8 @@ class GeometryQG(DistractorsGenerator):
             self.angle_relation()
         elif self.question_type == "find_area":
             self.find_area()
+        elif self.question_type == "find_volume":
+            self.find_volume()
         return{
             "question": self.question_text,
             "solution": self.solution,
@@ -97,7 +99,24 @@ class GeometryQG(DistractorsGenerator):
         self.solution = f"{result} cm\u00B2"
         A_dis = self.distractors_generator(result)
         self.distractors = [f"{a} cm\u00B2" for a in A_dis]
-
+    
+    def find_volume(self):
+        a,b,c = (random.randint(2,10) for _ in range(3))
+        if self.shape == "square":
+            self.question_text = f"A cube has a side length of {a} cm. What is its volume?"
+            result = a ** 3
+        elif self.shape == "rectangle":
+            self.question_text = f"A rectangular prism has a height of {a} cm, a width of {b} cm, and a length of {c} cm. What is its volume?"
+            result = (a * b) * c
+        elif self.shape == "triangle":
+            self.question_text = f"A prism has a triangular base with a base of {a} cm and a height of {b} cm. If the prism’s length is {c} cm, find its volume"
+            result = ((a * b) / 2) * c
+        elif self.shape == "circle":
+            self.question_text = f"A cylindrical water tank has a radius of {a} cm and a length of {c} cm. What is its volume?"
+            result = ((a**2) * math.pi) * c
+        self.solution = f"{round(result,2)} cm³"
+        A_dis = self.distractors_generator(result)
+        self.distractors = [f"{a} cm³" for a in A_dis]
 
 
 

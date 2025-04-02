@@ -14,12 +14,14 @@ class ExponentsQG(DistractorsGenerator):
     
     def generate(self):
         # Randomly choose between two types of exponent-related questions
-        self.question_type = random.choice(["simplest radical", "hidden power"])
+        self.question_type = random.choice(["simplest radical", "hidden power", "scientific notation"])
         
         if self.question_type == "simplest radical":
             self.simplest_radical()
         elif self.question_type == "hidden power":
             self.hidden_power()
+        elif self.question_type == "scientific notation":
+            self.scientific_notation()
         
         # Return the generated question, solution, and distractors
         return {
@@ -30,70 +32,71 @@ class ExponentsQG(DistractorsGenerator):
 
     def simplest_radical(self):
         # List of prime numbers for factorization
-        prime_nums = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47,
-                      53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109,
-                      113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179,
-                      181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241,
-                      251, 257, 263, 269, 271, 277, 281, 283, 293]
+        prime_numbers = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47,
+                        53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109,
+                        113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179,
+                        181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241,
+                        251, 257, 263, 269, 271, 277, 281, 283, 293]
 
         # Choose a random root index (square root, cube root, etc.)
-        root_index = random.randint(2, 5)
-        exponent_symbol = ["²√", "³√", "⁴√", "⁵√"]
-        selected_symbol = exponent_symbol[root_index - 2]
+        root_degree = random.randint(2, 5)
+        radical_symbols = ["²√", "³√", "⁴√", "⁵√"]
+        radical_symbol = radical_symbols[root_degree - 2]
 
         # 80% chance to select a number that simplifies
-        simplified_prob = random.random() < 0.8
+        is_simplifiable = random.random() < 0.8
 
         while True:
-            a = random.randint(10, 300)
-            if a in prime_nums:  # Skip prime numbers
+            radicand = random.randint(10, 300)
+            if radicand in prime_numbers:  # Skip prime numbers
                 continue
 
             # Factorize the number
-            temp_a = a
+            remaining_value = radicand
             factors = []
-            for prime in prime_nums:
-                while temp_a % prime == 0:
+            for prime in prime_numbers:
+                while remaining_value % prime == 0:
                     factors.append(prime)
-                    temp_a //= prime
-                if temp_a == 1:
+                    remaining_value //= prime
+                if remaining_value == 1:
                     break
 
             # Count occurrences of each prime factor
-            factor_count = Counter(factors)
+            factor_counts = Counter(factors)
             
             # Check if simplification is possible
-            simplification_found = any(count >= root_index for count in factor_count.values())
+            can_simplify = any(count >= root_degree for count in factor_counts.values())
 
             # Select number based on whether we want a simplifiable or non-simplifiable one
-            if simplified_prob and simplification_found:
+            if is_simplifiable and can_simplify:
                 break
-            elif not simplified_prob and not simplification_found:
+            elif not is_simplifiable and not can_simplify:
                 break
 
         # Generate the question
-        self.question_text = f"Find the simplest radical form for {selected_symbol}{a}"
+        self.question_text = f"Find the simplest radical form for {radical_symbol}{radicand}"
 
         # Compute the simplified radical form
-        outside = 1
-        inside = 1
-        for prime, count in factor_count.items():
-            out_count = count // root_index  # Part that goes outside the radical
-            in_count = count % root_index   # Part that stays inside
+        coefficient = 1  # Number outside the radical
+        remaining_radicand = 1  # Number inside the radical
+        for prime, count in factor_counts.items():
+            outside_exponent = count // root_degree  # Part that goes outside the radical
+            inside_exponent = count % root_degree   # Part that stays inside
 
-            if out_count:
-                outside *= prime ** out_count
-            if in_count:
-                inside *= prime ** in_count
+            if outside_exponent:
+                coefficient *= prime ** outside_exponent
+            if inside_exponent:
+                remaining_radicand *= prime ** inside_exponent
 
         # If there's nothing left inside the radical
-        if inside == 1:
-            self.solution = str(outside)
-            self.distractors = self.distractors_generator(outside)
+        if remaining_radicand == 1:
+            self.solution = str(coefficient)
+            self.distractors = self.distractors_generator(coefficient)
         else:
-            self.solution = f"{outside} {selected_symbol}{inside}"
-            A_dis = self.distractors_generator(outside)
-            self.distractors = [f"{a} {selected_symbol}{inside}" for a in A_dis]
+            self.solution = f"{coefficient} {radical_symbol}{remaining_radicand}"
+            distractor_values = self.distractors_generator(coefficient)
+            self.distractors = [f"{d} {radical_symbol}{remaining_radicand}" for d in distractor_values]
+
 
     def hidden_power(self):
         # Generate a simple exponent equation
@@ -106,6 +109,34 @@ class ExponentsQG(DistractorsGenerator):
 
         # Generate distractors
         self.distractors = self.distractors_generator(b)
+
+    def scientific_notation(self):
+        base = random.randint(100, 999)
+        exponent = random.randint(5, 10)
+        question_type = random.choice(["write", "convert", "add-sub"])  # "add-sub", "multiple", "divide"
+
+        if question_type == "write":
+            standard_form = base * (10 ** exponent)
+            sci_exponent = len(str(standard_form)) - 1
+            self.question_text = f"Write {standard_form:,} in scientific notation"
+            sci_coefficient = standard_form / (10 ** sci_exponent)
+
+            self.solution = f"{sci_coefficient} x 10^{sci_exponent}"
+            distractor_exponents = self.distractors_generator(sci_exponent)
+            self.distractors = [f"{sci_coefficient} x 10^{exp}" for exp in distractor_exponents]
+
+        elif question_type == "convert":
+            self.question_text = f"Convert {base} x 10^{exponent} to standard form"
+            standard_form = base * (10 ** exponent)
+
+            self.solution = f"{standard_form:,}"
+            self.distractors = [
+                f"{base * (10 ** (exponent - 1)):,}",
+                f"{(base + 1) * (10 ** exponent):,}",
+                f"{base * (10 ** (exponent + 1)):,}"
+            ]
+
+
 
 if __name__ == "__main__":
     # Test the ExponentsQG class by generating a question

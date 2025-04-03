@@ -83,7 +83,7 @@ class CalculatorWidget(QWidget):
         if button_text == "=":
             try:
                 result = self.calculate(self.display.text())
-                # Remove trailing .0 if the result is an integer
+                result = round(result, 10)
                 if result.is_integer():
                     self.display.setText(str(int(result)))
                 else:
@@ -108,6 +108,7 @@ class CalculatorWidget(QWidget):
             self.justcalculated = False
 
         self.display.setText(self.display.text() + button_text)
+
 
     def calculate(self, expression):
         """Tokenize and compute the arithmetic expression."""

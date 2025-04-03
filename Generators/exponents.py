@@ -97,7 +97,6 @@ class ExponentsQG(DistractorsGenerator):
             distractor_values = self.distractors_generator(coefficient)
             self.distractors = [f"{d} {radical_symbol}{remaining_radicand}" for d in distractor_values]
 
-
     def hidden_power(self):
         # Generate a simple exponent equation
         a = random.randint(2, 9)
@@ -112,23 +111,35 @@ class ExponentsQG(DistractorsGenerator):
 
     def scientific_notation(self):
         base = random.randint(100, 999)
-        exponent = random.randint(5, 10)
-        question_type = random.choice(["write", "convert", "add-sub"])  # "add-sub", "multiple", "divide"
+        exponent = random.randint(-6, 10)
+        question_type = random.choice(["write", "convert"])
 
         if question_type == "write":
             standard_form = base * (10 ** exponent)
-            sci_exponent = len(str(standard_form)) - 1
-            self.question_text = f"Write {standard_form:,} in scientific notation"
-            sci_coefficient = standard_form / (10 ** sci_exponent)
+            if standard_form >= 1:
+                sci_exponent = len(str(int(standard_form))) - 1
+                sci_coefficient = standard_form / (10 ** sci_exponent)
+            else:
+                sci_exponent = 0
+                sci_coefficient = standard_form
+                while abs(sci_coefficient) < 1:
+                    sci_coefficient *= 10
+                    sci_exponent -= 1
 
-            self.solution = f"{sci_coefficient} x 10^{sci_exponent}"
+            sci_coefficient_str = f"{sci_coefficient:.3g}"
+
+            self.question_text = f"Write {standard_form:,} in scientific notation"
+            self.solution = f"{sci_coefficient_str} x 10^{sci_exponent}"
+
             distractor_exponents = self.distractors_generator(sci_exponent)
-            self.distractors = [f"{sci_coefficient} x 10^{exp}" for exp in distractor_exponents]
+            self.distractors = [
+                f"{sci_coefficient_str} x 10^{exp}"
+                for exp in distractor_exponents
+            ]
 
         elif question_type == "convert":
             self.question_text = f"Convert {base} x 10^{exponent} to standard form"
             standard_form = base * (10 ** exponent)
-
             self.solution = f"{standard_form:,}"
             self.distractors = [
                 f"{base * (10 ** (exponent - 1)):,}",

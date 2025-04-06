@@ -110,65 +110,108 @@ class ExponentsQG(DistractorsGenerator):
         self.distractors = self.distractors_generator(b)
 
     def scientific_notation(self):
-        base = random.randint(100, 999)
-        exponent = random.randint(-6, 10)
-        question_type = random.choice(["write", "convert", "multi-divide"])
+            base = random.randint(100, 999)
+            exponent = random.randint(-6, 10)
+            question_type = random.choice(["write", "convert", "multi-divide", "add-sub"])
 
-        if question_type == "write":
-            standard_form = base * (10 ** exponent)
-            if standard_form >= 1:
-                sci_exponent = len(str(int(standard_form))) - 1
-                sci_coefficient = standard_form / (10 ** sci_exponent)
-            else:
-                sci_exponent = 0
-                sci_coefficient = standard_form
-                while abs(sci_coefficient) < 1:
-                    sci_coefficient *= 10
-                    sci_exponent -= 1
+            if question_type == "write":
+                standard_form = base * (10 ** exponent)
+                if standard_form >= 1:
+                    sci_exponent = len(str(int(standard_form))) - 1
+                    sci_coefficient = standard_form / (10 ** sci_exponent)
+                else:
+                    sci_exponent = 0
+                    sci_coefficient = standard_form
+                    while abs(sci_coefficient) < 1:
+                        sci_coefficient *= 10
+                        sci_exponent -= 1
 
-            sci_coefficient_str = f"{sci_coefficient:.3g}"
+                sci_coefficient_str = f"{sci_coefficient:.3g}"
 
-            self.question_text = f"Write {standard_form:,} in scientific notation"
-            self.solution = f"{sci_coefficient_str} x 10^{sci_exponent}"
+                self.question_text = f"Write {standard_form:,} in scientific notation"
+                self.solution = f"{sci_coefficient_str} x 10^{sci_exponent}"
 
-            distractor_exponents = self.distractors_generator(sci_exponent)
-            self.distractors = [
-                f"{sci_coefficient_str} x 10^{exp}"
-                for exp in distractor_exponents
-            ]
-        elif question_type == "convert":
-            self.question_text = f"Convert {base} x 10^{exponent} to standard form"
-            standard_form = base * (10 ** exponent)
-            self.solution = f"{standard_form:,}"
-            self.distractors = [
-                f"{base * (10 ** (exponent - 1)):,}",
-                f"{(base + 1) * (10 ** exponent):,}",
-                f"{base * (10 ** (exponent + 1)):,}"
-            ]
-        elif question_type == "multi-divide":
-            a, b, c, d = (random.randint(2, 10) for _ in range(4))
+                distractor_exponents = self.distractors_generator(sci_exponent)
+                self.distractors = [
+                    f"{sci_coefficient_str} x 10^{exp}"
+                    for exp in distractor_exponents
+                ]
+            elif question_type == "convert":
+                self.question_text = f"Convert {base} x 10^{exponent} to standard form"
+                standard_form = base * (10 ** exponent)
+                self.solution = f"{standard_form:,}"
+                self.distractors = [
+                    f"{base * (10 ** (exponent - 1)):,}",
+                    f"{(base + 1) * (10 ** exponent):,}",
+                    f"{base * (10 ** (exponent + 1)):,}"
+                ]
+            elif question_type == "multi-divide":
+                a, b, c, d = (random.randint(2, 10) for _ in range(4))
 
-            if random.random() <= 0.5:
-                self.question_text = f"What is ({a} x 10^{b}) / ({c} x 10^{d})?"
+                if random.random() <= 0.5:
+                    self.question_text = f"What is ({a} x 10^{b}) / ({c} x 10^{d})?"
 
-                coefficient = a / c
-                coefficient = round(coefficient, 2) if not coefficient.is_integer() else int(coefficient)
+                    coefficient = a / c
+                    coefficient = round(coefficient, 2) if not coefficient.is_integer() else int(coefficient)
+                    
+                    self.solution = f"{coefficient} x 10^{b - d}"
+                    self.distractors = [
+                        f"{coefficient} x 10^{b + d}",
+                        f"{round(c / a, 2)} x 10^{b - d}",
+                        f"{coefficient} x 10^{d - b}" 
+                    ]
+
+                else:
+                    self.question_text = f"What is ({a} x 10^{b}) x ({c} x 10^{d})?"
+                    self.solution = f"{a * c} x 10^{b + d}"
+                    self.distractors = [
+                        f"{a * c} x 10^{b - d}",
+                        f"{a + c} x 10^{b + d}",
+                        f"{a * c} x 10^{b * d}"
+                    ]
+            elif question_type == "add-sub":
+                a = random.randint(1, 9)
+                c = random.randint(1, 9)
+                while a == c:
+                    c = random.randint(1, 9)
+
+                shared_exponent = random.randint(-5, 5)
+                operation = random.choice(["+", "-"])
                 
-                self.solution = f"{coefficient} x 10^{b - d}"
-                self.distractors = [
-                    f"{coefficient} x 10^{b + d}",
-                    f"{round(c / a, 2)} x 10^{b - d}",
-                    f"{coefficient} x 10^{d - b}" 
-                ]
+                if operation == "+":
+                    self.question_text = f"What is ({a} × 10^{shared_exponent}) + ({c} × 10^{shared_exponent}) in scientific notation?"
+                    result_coefficient = a + c
+                    result_exponent = shared_exponent
+                    
+                    if result_coefficient >= 10:
+                        result_coefficient /= 10
+                        result_exponent += 1
+                    
+                    if result_coefficient == int(result_coefficient):
+                        result_coefficient = int(result_coefficient)
+                    else:
+                        result_coefficient = round(result_coefficient, 1)
 
-            else:
-                self.question_text = f"What is ({a} x 10^{b}) x ({c} x 10^{d})?"
-                self.solution = f"{a * c} x 10^{b + d}"
-                self.distractors = [
-                    f"{a * c} x 10^{b - d}",
-                    f"{a + c} x 10^{b + d}",
-                    f"{a * c} x 10^{b * d}"
-                ]
+                    self.solution = f"{result_coefficient} × 10^{result_exponent}"
+                    A_dis = self.distractors_generator(result_coefficient)
+                    self.distractors = [f"{a} × 10^{result_exponent}" for a in A_dis]
+                else:
+                    if a < c:
+                        a, c = c, a
+                        
+                    self.question_text = f"What is ({a} × 10^{shared_exponent}) - ({c} × 10^{shared_exponent}) in scientific notation?"
+                    result_coefficient = a - c
+                    result_exponent = shared_exponent
+
+                    if result_coefficient == int(result_coefficient):
+                        result_coefficient = int(result_coefficient)
+                    else:
+                        result_coefficient = round(result_coefficient, 1)
+                    
+                        
+                    self.solution = f"{result_coefficient} × 10^{result_exponent}"
+                    A_dis = self.distractors_generator(result_coefficient)
+                    self.distractors = [f"{a} × 10^{result_exponent}" for a in A_dis]
 
 
 

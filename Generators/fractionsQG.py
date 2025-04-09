@@ -50,21 +50,17 @@ class FractionQG():
 
         if operator_symbol == "+":
             correct_numer = a * d + c * b
-            correct_denom = b * d
-            self.solution = f"{correct_numer}/{correct_denom}"
-            self.question_text = f"Calculate: {a}/{b} + {c}/{d}"
             distractor1 = f"{a * d - c * b}/{b * d}"   # subtraction error
             distractor2 = f"{a * d + c * b}/{b + d}"     # wrong denominator (adding instead of multiplying)
             distractor3 = f"{a * b + c * d}/{b * d}"     # mixing multiplication operations
         else:
             correct_numer = a * d - c * b
-            correct_denom = b * d
-            self.solution = f"{correct_numer}/{correct_denom}"
-            self.question_text = f"Calculate: {a}/{b} - {c}/{d}"
             distractor1 = f"{a * d + c * b}/{b * d}"     # addition error
             distractor2 = f"{a * d - c * b}/{b + d}"       # wrong denominator
             distractor3 = f"{a * b - c * d}/{b * d}"       # mixing multiplication operations
-
+        correct_denom = b * d
+        self.solution = f"{correct_numer}/{correct_denom}"
+        self.question_text = f"Calculate: {a}/{b} {operator_symbol} {c}/{d} (using cross multiplication method)"
         self.distractors = [distractor1, distractor2, distractor3]
         return self.question_text, self.solution, self.distractors
 

@@ -12,7 +12,7 @@ class GeometryQG(DistractorsGenerator):
         self.distractors = None
         
     def generate(self):
-        self.question_type = random.choice(["geometry_info","find_perimeter","angle_relation","find_area","find_volume"])
+        self.question_type = random.choice(["geometry_info","find_perimeter","angle_relation","find_area","find_volume", "pythagorean_theorem"])
         self.shape = random.choice(["square","rectangle","triangle","circle"])
         if self.question_type == "geometry_info":
             self.geometry_info()
@@ -24,6 +24,8 @@ class GeometryQG(DistractorsGenerator):
             self.find_area()
         elif self.question_type == "find_volume":
             self.find_volume()
+        elif self.question_type == "pythagorean_theorem":
+            self.pythagorean_theorem()
         return{
             "question": self.question_text,
             "solution": self.solution,
@@ -117,6 +119,24 @@ class GeometryQG(DistractorsGenerator):
         self.solution = f"{round(result,2)} cm³"
         A_dis = self.distractors_generator(result)
         self.distractors = [f"{a} cm³" for a in A_dis]
+    
+    def pythagorean_theorem(self):
+        a, b = (random.randint(2,15) for _ in range(2))
+        question_type =  random.choice(["find_hypotenuse", "missing_leg", "square_diagonal"])
+        if question_type == "find_hypotenuse":
+            self.question_text = f"A right triangle has legs of lengths {a} cm and {b} cm. What is the length of the hypotenuse?"
+            result = ((a**2) + (b**2))
+        elif question_type == "missing_leg":
+            a = random.randint(10,20)
+            b = random.randint(3,a-4)
+            self.question_text = f"A triangle has a hypotenuse of {a} cm and one leg of {b} cm. What is the length of the other leg?"
+            result = (a**2) - (b**2)
+        elif question_type == "square_diagonal":
+            self.question_text = f"Each side of a square is {a} cm long. What is the length of the diagonal (from one corner to the opposite corner)?"
+            result = ((a**2) * 2)
+        self.solution = f"√{result} cm"
+        A_dis = self.distractors_generator(result)
+        self.distractors = [f"√{a} cm" for a in A_dis]
 
 
 

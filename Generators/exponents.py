@@ -175,42 +175,43 @@ class ExponentsQG(DistractorsGenerator):
                 while a == c:
                     c = random.randint(1, 9)
 
-                shared_exponent = random.randint(-5, 5)
+                expo1 = random.randint(-5, 5)
+                expo2 = random.randint(-5, 5)
+
                 operation = random.choice(["+", "-"])
-                
+                self.question_text = f"What is ({a} × 10^{expo1}) {operation} ({c} × 10^{expo2}) in scientific notation?"
+
+                if expo1 > expo2:
+                    shift = expo1 - expo2
+                    c /= (10**shift)
+                    shared_exp = expo1
+                else:
+                    shift = expo2 - expo1
+                    a /= (10**shift)
+                    shared_exp = expo2
+
                 if operation == "+":
-                    self.question_text = f"What is ({a} × 10^{shared_exponent}) + ({c} × 10^{shared_exponent}) in scientific notation?"
                     result_coefficient = a + c
-                    result_exponent = shared_exponent
-                    
-                    if result_coefficient >= 10:
+                else:
+                    result_coefficient = a - c
+
+                result_exponent = shared_exp
+
+                if result_coefficient == 0:
+                    self.solution = "0"
+                else:
+                    while abs(result_coefficient) >= 10:
                         result_coefficient /= 10
                         result_exponent += 1
-                    
-                    if result_coefficient == int(result_coefficient):
-                        result_coefficient = int(result_coefficient)
-                    else:
-                        result_coefficient = round(result_coefficient, 1)
+
+                    while abs(result_coefficient) < 1:
+                        result_coefficient *= 10
+                        result_exponent -= 1
+
+                    result_coefficient = int(result_coefficient) if result_coefficient == int(result_coefficient) else round(result_coefficient, shift+1)
 
                     self.solution = f"{result_coefficient} × 10^{result_exponent}"
-                    A_dis = self.distractors_generator(result_coefficient)
-                    self.distractors = [f"{a} × 10^{result_exponent}" for a in A_dis]
-                else:
-                    if a < c:
-                        a, c = c, a
-                        
-                    self.question_text = f"What is ({a} × 10^{shared_exponent}) - ({c} × 10^{shared_exponent}) in scientific notation?"
-                    result_coefficient = a - c
-                    result_exponent = shared_exponent
-
-                    if result_coefficient == int(result_coefficient):
-                        result_coefficient = int(result_coefficient)
-                    else:
-                        result_coefficient = round(result_coefficient, 1)
-                    
-                        
-                    self.solution = f"{result_coefficient} × 10^{result_exponent}"
-                    A_dis = self.distractors_generator(result_coefficient)
+                    A_dis = self.distractors_generator(result_coefficient, rounding=shift)
                     self.distractors = [f"{a} × 10^{result_exponent}" for a in A_dis]
 
 

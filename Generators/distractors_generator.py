@@ -1,7 +1,7 @@
 import random  # Import random module for generating random numbers
 
 class DistractorsGenerator:
-    def distractors_generator(self, result, value=3, title=False, rounding=2):
+    def distractors_generator(self, result, value=3, title=False, rounding=2, extra=None):
         # Generate unique random offsets between 1 and 5
         offsets = random.sample(range(1, 6), value)
 
@@ -16,5 +16,8 @@ class DistractorsGenerator:
             distractors = [round(val, rounding) for val in distractors]
 
         # Format distractors with title if provided
+        if extra:
+            distractors.append(extra)
         return [f"{title}: {val}" for val in distractors] if title else [str(val) for val in distractors]
+    
 

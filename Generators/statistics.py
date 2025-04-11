@@ -9,10 +9,12 @@ class Statistics(DistractorsGenerator):
         self.question_type = None
     
     def generate(self):
-        self.question_type = random.choice(["mean_median_mode"])
+        self.question_type = random.choice(["mean_median_mode", "probability"])
 
         if self.question_type == "mean_median_mode":
             self.mean_median_mode()
+        elif self.question_type == "probability":
+            self.probability()
 
         return {
             "question": self.question_text,
@@ -63,5 +65,28 @@ class Statistics(DistractorsGenerator):
         A_dis = self.distractors_generator(mean, value=2, extra=mean)
         B_dis = self.distractors_generator(median)
         self.distractors = [f"Mean: {a}, Median: {b}, Mode: {mode}" for a, b in zip(A_dis, B_dis)]
+    
+    def probability(self):
+        a, b, c = (random.randint(2, 20) for _ in range(3))
+        marbles = {"red": a, "green": b, "yellow": c}
+        
+        marble_type = random.choice(["red", "green", "yellow"])
+        val = marbles[marble_type]
+        
+        self.question_text = (
+            f"In a bag there are 3 types of marbles: {a} red, {b} green, {c} yellow.\n"
+            f"What is the probability of getting a {marble_type} marble?"
+        )
+        
+        total = a + b + c
+        result = (100 / total) * val
+        result = int(result) if result == int(result) else round(result, 2)
+        self.solution = f"{result}%"
+        A_dis = self.distractors_generator(result)
+        self.distractors = [f"{a}%" for a in A_dis]
+
+
+
+
 
         

@@ -9,7 +9,7 @@ class Statistics(DistractorsGenerator):
         self.question_type = None
     
     def generate(self):
-        self.question_type = random.choice(["mean_median_mode", "probability", "find_range"])
+        self.question_type = random.choice(["mean_median_mode", "probability", "find_range", "standard_deviation"])
 
         if self.question_type == "mean_median_mode":
             self.mean_median_mode()
@@ -17,6 +17,8 @@ class Statistics(DistractorsGenerator):
             self.probability()
         elif self.question_type == "find_range":
             self.find_range()
+        elif self.question_type == "standard_deviation":
+            self.standard_deviation()
 
         return {
             "question": self.question_text,
@@ -95,6 +97,22 @@ class Statistics(DistractorsGenerator):
         result = data_set[-1] - data_set[0]
         self.solution = f"{result}"
         self.distractors = self.distractors_generator(result)
+    
+    def standard_deviation(self):
+        a = random.randint(3, 10)
+        data_set = [random.randint(15,50) for _ in range(a)]
+        total = 0
+        
+        self.question_text = (
+            f"Here are the ages of {a} friends:\n{data_set}\n"
+            "Calculate the population standard deviation of these ages."
+        )
+        mean = sum(data_set) / a
+        for num in data_set:
+            total += (num - mean)**2
+        result = round((total / a) ** 0.5, 4)
+        self.solution = f"{result}"
+        self.distractors = self.distractors_generator(result, rounding=4)
 
 
 

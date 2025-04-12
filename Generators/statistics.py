@@ -9,12 +9,14 @@ class Statistics(DistractorsGenerator):
         self.question_type = None
     
     def generate(self):
-        self.question_type = random.choice(["mean_median_mode", "probability"])
+        self.question_type = random.choice(["mean_median_mode", "probability", "find_range"])
 
         if self.question_type == "mean_median_mode":
             self.mean_median_mode()
         elif self.question_type == "probability":
             self.probability()
+        elif self.question_type == "find_range":
+            self.find_range()
 
         return {
             "question": self.question_text,
@@ -84,7 +86,19 @@ class Statistics(DistractorsGenerator):
         self.solution = f"{result}%"
         A_dis = self.distractors_generator(result)
         self.distractors = [f"{a}%" for a in A_dis]
+    
+    def find_range(self):
+        a = random.randint(3, 10)
+        data_set = [random.randint(15,50) for _ in range(a)]
+        self.question_text = f"What is the range of this data? {data_set}"
+        data_set = sorted(data_set)
+        result = data_set[-1] - data_set[0]
+        self.solution = f"{result}"
+        self.distractors = self.distractors_generator(result)
 
+
+
+        
 
 
 

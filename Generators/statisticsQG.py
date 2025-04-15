@@ -1,7 +1,7 @@
 import random
 from Generators.distractors_generator import DistractorsGenerator
 
-class Statistics(DistractorsGenerator):
+class StatisticsQG(DistractorsGenerator):
     def __init__(self):
         self.question_text = None
         self.solution = None

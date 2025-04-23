@@ -32,15 +32,6 @@ class RatiosANDProportionQG(DistractorsGenerator):
             multiplier = random.randint(2,20)
             return ratio_A, ratio_B, multiplier
         return ratio_A, ratio_B
-    
-    def distractors_generator(self, result, title=False):
-        possible_offsets = list(range(1, 6))
-        unique_offsets = random.sample(possible_offsets, 3)
-        if title:
-            distractors = [f"{title}: {result + offset}" for offset in unique_offsets]
-        else:
-            distractors = [str(result + offset) for offset in unique_offsets]
-        return distractors
 
     def ratio(self):
         ratio_A, ratio_B, multiplier = self.ratio_generator(multiplier=True)
@@ -56,8 +47,8 @@ class RatiosANDProportionQG(DistractorsGenerator):
         correct_blue = result * ratio_B
         self.solution = f"Red: {correct_red}, Blue: {correct_blue}"
 
-        red_dis = self.distractors_generator(correct_red, title="Red")
-        blue_dis = self.distractors_generator(correct_blue, title="Blue")
+        red_dis = self.distractors_generator(correct_red, title="Red:")
+        blue_dis = self.distractors_generator(correct_blue, title="Blue:")
 
         self.distractors = [f"{red}, {blue}" for red, blue in zip(red_dis, blue_dis)]
 

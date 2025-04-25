@@ -18,6 +18,6 @@ class DistractorsGenerator:
         # Format distractors with title if provided
         if extra:
             distractors.append(extra)
-        return [f"{title} {val}" for val in distractors] if title else [str(val) for val in distractors]
+        return [f"{title}{val}" for val in distractors] if title else [str(val) for val in distractors]
     
 

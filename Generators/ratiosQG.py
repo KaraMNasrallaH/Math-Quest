@@ -47,8 +47,8 @@ class RatiosANDProportionQG(DistractorsGenerator):
         correct_blue = result * ratio_B
         self.solution = f"Red: {correct_red}, Blue: {correct_blue}"
 
-        red_dis = self.distractors_generator(correct_red, title="Red:")
-        blue_dis = self.distractors_generator(correct_blue, title="Blue:")
+        red_dis = self.distractors_generator(correct_red, title="Red: ")
+        blue_dis = self.distractors_generator(correct_blue, title="Blue: ")
 
         self.distractors = [f"{red}, {blue}" for red, blue in zip(red_dis, blue_dis)]
 

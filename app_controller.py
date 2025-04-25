@@ -13,7 +13,7 @@ from Generators.integer_arithemticQG import Integer_ArithmeticQG
 from Generators.exponentsQG import ExponentsQG
 from Generators.statisticsQG import StatisticsQG
 from Generators.measurementQG import MeasurementQG
-from Generators.algbra_basicQG import AlgbraBasicQG
+from Generators.algbra_basicQG import AlgebraBasicQG
 
 import ctypes
 import sys
@@ -63,7 +63,7 @@ class AppController(QMainWindow):
         elif topic == "Measurement":
             self.question_generator = MeasurementQG()
         elif topic == "Algebra Basics":
-            self.question_generator = AlgbraBasicQG()
+            self.question_generator = AlgebraBasicQG()
         else:
             return
         self.generate_question_form()

@@ -14,7 +14,7 @@ class ExponentsQG(DistractorsGenerator):
     
     def generate(self):
         # Randomly choose between two types of exponent-related questions
-        self.question_type = random.choice(["scientific notation"])
+        self.question_type = random.choice(["hidden power", "simplest radical", "scientific notation"])
         
         if self.question_type == "simplest radical":
             self.simplest_radical()
@@ -139,7 +139,7 @@ class ExponentsQG(DistractorsGenerator):
             elif question_type == "convert":
                 self.question_text = f"Convert {base} x 10^{exponent} to standard form"
                 standard_form = base * (10 ** exponent)
-                self.solution = f"{standard_form:,}"
+                self.solution = f"{standard_form:.10f}".rstrip('0').rstrip('.')
                 self.distractors = [
                     f"{base * (10 ** (exponent - 1)):,}",
                     f"{(base + 1) * (10 ** exponent):,}",

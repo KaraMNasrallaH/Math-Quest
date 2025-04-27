@@ -79,6 +79,7 @@ class AlgebraBasicQG(DistractorsGenerator):
     
     def polynomial(self):
         self.distractors = []
+        
         def coefficient_generator(count, low=-5, high=10):
             return [random.randint(low, high) for _ in range(count)]
         
@@ -92,48 +93,62 @@ class AlgebraBasicQG(DistractorsGenerator):
             result = []
             for a, b in zip(coes1, coes2):
                 if process == "sub":
-                    result.append(a+(b*-1))
+                    result.append(a + (-b))
                 else:
-                    result.append(a+b)
+                    result.append(a + b)
             return result
-        
-        def format_quadratics(ops, nums):
+
+        def format_quadratics(ops, nums, group=False):
             group_size = 3
             n = len(nums)
             suffixes = ["x^2", "x", ""] * (n // group_size)
 
-            chunks = []
-            for g in range(n // group_size):
-                parts = []
-                base = g * group_size
-                for i in range(group_size):
-                    num = abs(nums[ base + i ])
-                    if num == 0:
-                        continue
-                    op  = ops[ base + i ]
-                    suf = suffixes[ base + i ]
-                    val = "" if num == 1 and suf != "" else str(num)
-                    parts.append(f"{op} {val}{suf}")
-                chunks.append("(" + " ".join(parts) + ")")
+            parts = []
+            for i in range(n):
+                num = abs(nums[i])
+                if num == 0:
+                    continue
+                op = ops[i]
+                suf = suffixes[i]
+                val = "" if num == 1 and suf != "" else str(num)
+                parts.append(f"{op} {val}{suf}")
+            
+            expr = " ".join(parts)
+            if group:
+                return f"({expr})"
+            else:
+                return expr
 
-            return " + ".join(chunks)
-                
-        question_type = random.choice(["addition"])
-        if question_type == "addition":
+        question_type = random.choice(["add", "sub"])
+        if question_type in ["add", "sub"]:
             nums = coefficient_generator(6)
             quest_ops = num_operator(nums)
-            self.question_text = f"Simplify: {format_quadratics(quest_ops, nums)}"
-            result = combine_terms(nums)
 
+            if question_type == "sub":
+                process = "-"
+                result = combine_terms(nums, process="sub")
+            else:
+                process = "+"
+                result = combine_terms(nums)
+
+            # Group terms when showing the original question
+            first_half = format_quadratics(quest_ops[:3], nums[:3], group=True)
+            second_half = format_quadratics(quest_ops[3:], nums[3:], group=True)
+            self.question_text = f"Simplify: {first_half} {process} {second_half}"
+
+            # Solution formatting (no grouping!)
             sol_ops = num_operator(result)
-            self.solution = format_quadratics(sol_ops, result)
+            self.solution = format_quadratics(sol_ops, result, group=False)
+
             for _ in range(3):
                 fake = [
                     coef + random.choice([-2, -1, 1, 2])
                     for coef in result
                 ]
                 fake_ops = num_operator(fake)
-                self.distractors.append(format_quadratics(fake_ops, fake))
+                self.distractors.append(format_quadratics(fake_ops, fake, group=False))
+
+
             
             
                 

@@ -79,75 +79,120 @@ class AlgebraBasicQG(DistractorsGenerator):
     
     def polynomial(self):
         self.distractors = []
-        
-        def coefficient_generator(count, low=-5, high=10):
-            return [random.randint(low, high) for _ in range(count)]
-        
-        def num_operator(nums):
-            return ["-" if n < 0 else "+" for n in nums]
 
-        def combine_terms(coes, process="add"):
-            first_half = len(coes)//2
-            second_half = len(coes)
-            coes1, coes2 = coes[0:first_half], coes[first_half:second_half]
-            result = []
-            for a, b in zip(coes1, coes2):
-                if process == "sub":
-                    result.append(a + (-b))
+        def generate_terms(degree, groups):
+            terms = {}
+            degree += 1
+            for i in range(degree):
+                exp = degree - 1 - i
+                coeffs = [random.randint(-5, 10) for _ in range(groups)]
+                terms[exp] = coeffs
+            return terms
+
+        def format_terms(terms, degree, operator=""):
+            formatted = {}
+            for exp in terms.keys():
+                var = "x^"
+                coeffs = terms[exp]
+                formatted[exp] = []
+                exp_val = exp
+
+                if exp_val == 1:
+                    exp_val, var = "", "x"
+                elif exp_val == 0:
+                    exp_val, var = "", ""
+
+                if isinstance(coeffs, int):
+                    coeffs = [coeffs]
+
+                for c in coeffs:
+                    coefficient = abs(c)
+                    sign = ' + ' if c >= 0 else ' - '
+                    if c >= 0 and exp == degree:
+                        sign = ""
+                    if c == 0:
+                        formatted[exp].append("")
+                        continue
+                    elif c == 1 and exp > 0:
+                        coefficient = ""
+                    formatted[exp].append(f"{sign}{coefficient}{var}{exp_val}")
+
+            grouped_terms = list(zip(*(formatted[exp] for exp in formatted)))
+            if len(grouped_terms) == 1:
+                return "".join(grouped_terms[0])
+            parts = [f"({' '.join(g).strip()})" for g in grouped_terms]
+            return f" {operator} ".join(parts)
+
+        def solve_terms(terms, operator=""):
+            total = {}
+            if operator == '*' or "":
+                n_groups = len(next(iter(terms.values())))
+                group_dicts = []
+                for i in range(n_groups):
+                    grp = {exp: coeffs[i] for exp, coeffs in terms.items()}
+                    group_dicts.append(grp)
+                total = {0: 1}
+                for grp in group_dicts:
+                    new_total = {}
+                    for exp1, coef1 in total.items():
+                        for exp2, coef2 in grp.items():
+                            exp_sum = exp1 + exp2
+                            prod = coef1 * coef2
+                            new_total[exp_sum] = new_total.get(exp_sum, 0) + prod
+                    total = new_total
+            else:
+                if operator == '+':
+                    total = {exp: sum(coeffs) for exp, coeffs in terms.items()}
                 else:
-                    result.append(a + b)
-            return result
+                    total = {}
+                    for exp, coeffs in terms.items():
+                        first, *rest = coeffs
+                        total[exp] = first - sum(rest)
+            return total
 
-        def format_quadratics(ops, nums, group=False):
-            group_size = 3
-            n = len(nums)
-            suffixes = ["x^2", "x", ""] * (n // group_size)
+        operator = random.choice(["+", "-", "*"])
+        degree = 1 if operator in ["*",""] else 2
+        groups = 2
+        terms = generate_terms(degree, groups)
 
-            parts = []
-            for i in range(n):
-                num = abs(nums[i])
-                if num == 0:
-                    continue
-                op = ops[i]
-                suf = suffixes[i]
-                val = "" if num == 1 and suf != "" else str(num)
-                parts.append(f"{op} {val}{suf}")
-            
-            expr = " ".join(parts)
-            if group:
-                return f"({expr})"
-            else:
-                return expr
+        self.question_text = format_terms(terms, degree, operator)
+        result = solve_terms(terms, operator)
+        self.solution = format_terms(result, degree)
 
-        question_type = random.choice(["add", "sub"])
-        if question_type in ["add", "sub"]:
-            nums = coefficient_generator(6)
-            quest_ops = num_operator(nums)
+        seen = {self.solution}
+        MAX_ATTEMPTS = 20
+        for _ in range(3):
+            attempts = 0
+            while attempts < MAX_ATTEMPTS:
+                fake = result.copy()
+                non_zero_exps = [e for e, c in result.items() if c != 0]
+                if not non_zero_exps:
+                    non_zero_exps = list(result.keys())
+                exp = random.choice(non_zero_exps)
 
-            if question_type == "sub":
-                process = "-"
-                result = combine_terms(nums, process="sub")
-            else:
-                process = "+"
-                result = combine_terms(nums)
+                def noisy(true):
+                    while True:
+                        n = random.choice([-1, 1]) * random.randint(1, 6)
+                        val = true + n
+                        if val != 0:
+                            return val
 
-            # Group terms when showing the original question
-            first_half = format_quadratics(quest_ops[:3], nums[:3], group=True)
-            second_half = format_quadratics(quest_ops[3:], nums[3:], group=True)
-            self.question_text = f"Simplify: {first_half} {process} {second_half}"
+                fake[exp] = noisy(result[exp])
+                candidate = format_terms(fake, degree)
 
-            # Solution formatting (no grouping!)
-            sol_ops = num_operator(result)
-            self.solution = format_quadratics(sol_ops, result, group=False)
+                if candidate not in seen and candidate.strip():
+                    seen.add(candidate)
+                    self.distractors.append(candidate)
+                    break
+                attempts += 1
 
-            for _ in range(3):
-                fake = [
-                    coef + random.choice([-2, -1, 1, 2])
-                    for coef in result
-                ]
-                fake_ops = num_operator(fake)
-                self.distractors.append(format_quadratics(fake_ops, fake, group=False))
+            if attempts >= MAX_ATTEMPTS:
+                self.distractors.append("0")
 
+        
+        
+        
+        
 
             
             

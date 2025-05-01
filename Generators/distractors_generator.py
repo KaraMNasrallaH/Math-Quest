@@ -1,9 +1,9 @@
 import random  # Import random module for generating random numbers
 
 class DistractorsGenerator:
-    def distractors_generator(self, result, value=3, title=False, rounding=2, extra=None):
+    def distractors_generator(self, result, distractors=3, title=False, rounding=2, extra=None):
         # Generate unique random offsets between 1 and 5
-        offsets = random.sample(range(1, 6), value)
+        offsets = random.sample(range(1, 6), distractors)
 
         # Randomly choose whether to add or subtract the offsets
         sign = 1 if random.choice(["+", "-"]) == "+" else -1

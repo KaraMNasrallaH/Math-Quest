@@ -78,7 +78,38 @@ class AlgebraBasicQG(DistractorsGenerator):
                     self.distractors = self.distractors_generator(abs_r, title="1 / x^")
     
     def polynomial(self):
-        self.distractors = []
+
+        def distractors_generator(seen, result, degree, max_attempts=20, distractos=3):
+            distractors = []
+            for _ in range(distractos):
+                attempts = 0
+                while attempts < max_attempts:
+                    fake = result.copy()
+                    non_zero_exps = [e for e, c in result.items() if c != 0]
+                    if not non_zero_exps:
+                        non_zero_exps = list(result.keys())
+                    exp = random.choice(non_zero_exps)
+
+                    def noisy(true):
+                        while True:
+                            n = random.choice([-1, 1]) * random.randint(1, 6)
+                            val = true + n
+                            if val != 0:
+                                return val
+
+                    fake[exp] = noisy(result[exp])
+                    candidate = format_terms(fake, degree)
+
+                    if candidate not in seen and candidate.strip():
+                        seen.add(candidate)
+                        distractors.append(candidate)
+                        break
+                    attempts += 1
+
+                if attempts >= max_attempts:
+                    distractors.append("0")
+            return distractors
+            
 
         def generate_terms(degree, groups):
             terms = {}
@@ -122,10 +153,10 @@ class AlgebraBasicQG(DistractorsGenerator):
                 return "".join(grouped_terms[0])
             parts = [f"({' '.join(g).strip()})" for g in grouped_terms]
             return f" {operator} ".join(parts)
-
+        
         def solve_terms(terms, operator=""):
             total = {}
-            if operator == '*' or "":
+            if operator in ["*",""]:
                 n_groups = len(next(iter(terms.values())))
                 group_dicts = []
                 for i in range(n_groups):
@@ -148,46 +179,16 @@ class AlgebraBasicQG(DistractorsGenerator):
                     for exp, coeffs in terms.items():
                         first, *rest = coeffs
                         total[exp] = first - sum(rest)
-            return total
+            return total, list(total.keys())[0]
 
         operator = random.choice(["+", "-", "*"])
         degree = 1 if operator in ["*",""] else 2
         groups = 2
         terms = generate_terms(degree, groups)
-
         self.question_text = format_terms(terms, degree, operator)
-        result = solve_terms(terms, operator)
+        result, degree = solve_terms(terms, operator)
         self.solution = format_terms(result, degree)
-
-        seen = {self.solution}
-        MAX_ATTEMPTS = 20
-        for _ in range(3):
-            attempts = 0
-            while attempts < MAX_ATTEMPTS:
-                fake = result.copy()
-                non_zero_exps = [e for e, c in result.items() if c != 0]
-                if not non_zero_exps:
-                    non_zero_exps = list(result.keys())
-                exp = random.choice(non_zero_exps)
-
-                def noisy(true):
-                    while True:
-                        n = random.choice([-1, 1]) * random.randint(1, 6)
-                        val = true + n
-                        if val != 0:
-                            return val
-
-                fake[exp] = noisy(result[exp])
-                candidate = format_terms(fake, degree)
-
-                if candidate not in seen and candidate.strip():
-                    seen.add(candidate)
-                    self.distractors.append(candidate)
-                    break
-                attempts += 1
-
-            if attempts >= MAX_ATTEMPTS:
-                self.distractors.append("0")
+        self.distractors = distractors_generator({self.solution}, result, degree)
 
         
         

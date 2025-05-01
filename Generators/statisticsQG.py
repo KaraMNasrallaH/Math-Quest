@@ -66,7 +66,7 @@ class StatisticsQG(DistractorsGenerator):
             mode = "No Mode"
 
         self.solution = f"Mean: {mean}, Median: {median}, Mode: {mode}"
-        A_dis = self.distractors_generator(mean, value=2, extra=mean)
+        A_dis = self.distractors_generator(mean, distractors=2, extra=mean)
         B_dis = self.distractors_generator(median)
         self.distractors = [f"Mean: {a}, Median: {b}, Mode: {mode}" for a, b in zip(A_dis, B_dis)]
     

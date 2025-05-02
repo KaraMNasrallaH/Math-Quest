@@ -1,3 +1,4 @@
+# AppController.py
 from PyQt5.QtWidgets import QApplication, QMainWindow, QStackedWidget
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtGui import QIcon
@@ -43,7 +44,6 @@ class AppController(QMainWindow):
         self.enable_dark_title_bar()
 
     def on_topic_selected(self, topic):
-        """Handle topic selection from Main Menu."""
         if topic == "Fractions":
             self.question_generator = FractionQG()
         elif topic == "Mixed Numbers":
@@ -69,17 +69,13 @@ class AppController(QMainWindow):
         self.generate_question_form()
     
     def generate_question_form(self):
-        """
-        Create a new question form, load a question, update the count,
-        and switch the view to the question form.
-        """
         if self.current_question_form is not None:
             self.stack.removeWidget(self.current_question_form)
             self.current_question_form.deleteLater()
         
         self.current_question_form = QuestionForm1()
         self.questionCount.connect(self.current_question_form.update_count)
-        
+
         self.question_data = self.question_generator.generate()
         self.current_question_form.load_question(self.question_data)
         
@@ -88,12 +84,15 @@ class AppController(QMainWindow):
         
         if self.question_passed == self.total_questions:
             self.close()
+
         self.current_question_form.new_question.connect(self.generate_question_form)
         self.question_passed += 1
-        self.questionCount.emit(str(self.question_passed))
+
+        # Send formatted string like "1 out of 15"
+        count_str = f"{self.question_passed} out of {self.total_questions}"
+        self.questionCount.emit(count_str)
 
     def enable_dark_title_bar(self):
-        """Enable dark title bar on Windows."""
         if sys.platform == "win32":
             hwnd = int(self.winId())
             DWMWA_USE_IMMERSIVE_DARK_MODE = 20

@@ -168,8 +168,8 @@ class QuestionForm1(QWidget):
         self.new_question.emit("")
 
     def update_count(self, count_str):
-        """Method to update the question count label."""
-        self.question_count_label.setText(f"Question: {count_str} out of 15")
+        """Update the question count label using a pre-formatted string like '1 out of 15'."""
+        self.question_count_label.setText(f"Question: {count_str}")
         
     def resizeEvent(self, event):
         """Handles window resizing by adjusting component sizes and layout margins."""

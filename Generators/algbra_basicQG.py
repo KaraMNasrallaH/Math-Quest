@@ -79,9 +79,9 @@ class AlgebraBasicQG(DistractorsGenerator):
     
     def polynomial(self):
 
-        def distractors_generator(seen, result, degree, max_attempts=20, distractos=3):
+        def distractors_generator(seen, result, degree, max_attempts=20, total_distractors=3):
             distractors = []
-            for _ in range(distractos):
+            for _ in range(total_distractors):
                 attempts = 0
                 while attempts < max_attempts:
                     fake = result.copy()
@@ -110,14 +110,28 @@ class AlgebraBasicQG(DistractorsGenerator):
                     distractors.append("0")
             return distractors
             
-
-        def generate_terms(degree, groups):
-            terms = {}
+        def generate_terms(degree, groups, groups_length=None):
             degree += 1
-            for i in range(degree):
-                exp = degree - 1 - i
-                coeffs = [random.randint(-5, 10) for _ in range(groups)]
-                terms[exp] = coeffs
+
+            if groups_length is None:
+                thresholds = []
+            else:
+                thresholds = list(groups_length)
+
+            while len(thresholds) < groups:
+                thresholds.append(degree)
+
+            max_exp = max(degree, max(thresholds))
+            terms = {}
+            for exp in range(max_exp, -1, -1):
+                row = []
+                for thresh in thresholds:
+                    if exp <= thresh:
+                        row.append(random.randint(-5, 10))
+                    else:
+                        row.append(0)
+                terms[exp] = row
+
             return terms
 
         def format_terms(terms, degree, operator=""):
@@ -154,7 +168,7 @@ class AlgebraBasicQG(DistractorsGenerator):
             parts = [f"({' '.join(g).strip()})" for g in grouped_terms]
             return f" {operator} ".join(parts)
         
-        def solve_terms(terms, operator=""):
+        def multiple_poly(terms):
             total = {}
             if operator in ["*",""]:
                 n_groups = len(next(iter(terms.values())))
@@ -171,24 +185,37 @@ class AlgebraBasicQG(DistractorsGenerator):
                             prod = coef1 * coef2
                             new_total[exp_sum] = new_total.get(exp_sum, 0) + prod
                     total = new_total
-            else:
-                if operator == '+':
-                    total = {exp: sum(coeffs) for exp, coeffs in terms.items()}
-                else:
-                    total = {}
-                    for exp, coeffs in terms.items():
-                        first, *rest = coeffs
-                        total[exp] = first - sum(rest)
             return total, list(total.keys())[0]
+        
+        def sum_poly(terms):
+            total = {exp: sum(coeffs) for exp, coeffs in terms.items()}
+            return total, list(total.keys())[0]
+        
+        def subtract_poly(terms):
+            total = {}
+            for exp, coeffs in terms.items():
+                first, *rest = coeffs
+                total[exp] = first - sum(rest)
+            return total, list(total.keys())[0]
+        
+        def divistion_poly(terms):
+            pass
 
         operator = random.choice(["+", "-", "*"])
         degree = 1 if operator in ["*",""] else 2
         groups = 2
         terms = generate_terms(degree, groups)
         self.question_text = format_terms(terms, degree, operator)
-        result, degree = solve_terms(terms, operator)
+
+        if operator == "+":
+            result, degree = sum_poly(terms)
+        elif operator == "*":
+            result, degree = multiple_poly(terms)
+        elif operator == "-":
+            result, degree = subtract_poly(terms)
         self.solution = format_terms(result, degree)
         self.distractors = distractors_generator({self.solution}, result, degree)
+        
 
         
         
